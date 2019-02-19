@@ -1,3 +1,12 @@
-import cv2
-import numpy as np
+import gui
+
 import tkinter as tk
+
+
+def main():
+    root = gui.MainWindow()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
