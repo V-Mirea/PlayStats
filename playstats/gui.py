@@ -1,18 +1,19 @@
 import tkinter as tk
+from PIL import Image, ImageTk
+import cv2
 
 
 class MainWindow(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self._frame = None
-        self.switch_frame(SelectionScreen)
+        self.switch_frame(SelectionScreen(self))
 
-    def switch_frame(self, frame_class):
+    def switch_frame(self, frame):
         """Delete visible frame and replace with one of type 'frame_class'."""
-        new_frame = frame_class(self)
         if self._frame is not None:
             self._frame.destroy()
-        self._frame = new_frame
+        self._frame = frame
         self._frame.pack(fill=tk.BOTH, expand=1)
 
 
@@ -42,3 +43,36 @@ class SelectionScreen(tk.Frame):
 
     def browse(self):
         pass
+
+
+class VideoScreen(tk.Frame):
+    def __init__(self, parent, src=None):
+        tk.Frame.__init__(self, parent)
+
+        self.image = None
+        self.frame = None
+        self._canvas = None
+        self._src = src
+
+        if src is not None and src.isOpened():
+            _, frame = src.read()
+            frame_scaled = cv2.pyrDown(frame)
+            height, width, channels = frame_scaled.shape
+
+            self._canvas = tk.Canvas(self, width=width, height=height)
+            self.display_frame(frame_scaled)
+        else:
+            self._canvas = tk.Canvas(self, width=960, height=540)
+
+        self._canvas.pack(fill=tk.BOTH, expand=1)
+
+    def display_frame(self, frame):
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        self.image = ImageTk.PhotoImage(Image.fromarray(frame_rgb))
+        self._canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
+        self.frame = frame
+
+    def play_source(self):
+        while self._src.isOpened():
+            _, frame = self._src.read()
+            self.display_frame(frame)
