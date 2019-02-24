@@ -1,20 +1,16 @@
 import gui
+import video
 
 import tkinter as tk
 import cv2
 
 
 def main():
+    cap = cv2.VideoCapture('res/BF4 HD test.avi')
+    stream = video.VideoStream(cap)
     root = gui.MainWindow()
-
-    cap = cv2.VideoCapture('res/csgo clutch.avi')
-    stream = gui.VideoScreen(root, cap)
-
-    root.switch_frame(stream)
-    stream.play_source()
-
-    root.mainloop()
-
+    screen = gui.VideoScreen(root, stream)
+    root.start(screen)
 
 if __name__ == "__main__":
     main()

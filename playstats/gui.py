@@ -1,20 +1,23 @@
 import tkinter as tk
-from PIL import Image, ImageTk
-import cv2
+import PIL.Image, PIL.ImageTk
 
 
 class MainWindow(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self._frame = None
-        self.switch_frame(SelectionScreen(self))
+        self.frame = None
 
     def switch_frame(self, frame):
-        """Delete visible frame and replace with one of type 'frame_class'."""
-        if self._frame is not None:
-            self._frame.destroy()
-        self._frame = frame
-        self._frame.pack(fill=tk.BOTH, expand=1)
+        """Delete visible frame and replace with 'frame'."""
+        if self.frame is not None:
+            self.frame.destroy()
+        self.frame = frame
+        self.frame.pack(fill=tk.BOTH, expand=1)
+
+    def start(self, starting_screen=None):
+        starting_screen = starting_screen or SelectionScreen(self)
+        self.switch_frame(starting_screen)
+        self.mainloop()
 
 
 class SelectionScreen(tk.Frame):
@@ -46,33 +49,22 @@ class SelectionScreen(tk.Frame):
 
 
 class VideoScreen(tk.Frame):
-    def __init__(self, parent, src=None):
+    def __init__(self, parent, stream=None):
         tk.Frame.__init__(self, parent)
+        self.stream = stream
 
-        self.image = None
-        self.frame = None
-        self._canvas = None
-        self._src = src
+        self.canvas = tk.Canvas(self, width=stream.width, height=stream.height)
+        self.canvas.pack(fill=tk.BOTH, expand=1)
 
-        if src is not None and src.isOpened():
-            _, frame = src.read()
-            frame_scaled = cv2.pyrDown(frame)
-            height, width, channels = frame_scaled.shape
+        self.delay = 15
+        self.update()
 
-            self._canvas = tk.Canvas(self, width=width, height=height)
-            self.display_frame(frame_scaled)
-        else:
-            self._canvas = tk.Canvas(self, width=960, height=540)
+    def update(self):
+        ret, frame = self.stream.get_frame()
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
 
-        self._canvas.pack(fill=tk.BOTH, expand=1)
+        self.master.after(self.delay, self.update)
 
-    def display_frame(self, frame):
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        self.image = ImageTk.PhotoImage(Image.fromarray(frame_rgb))
-        self._canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
-        self.frame = frame
 
-    def play_source(self):
-        while self._src.isOpened():
-            _, frame = self._src.read()
-            self.display_frame(frame)
