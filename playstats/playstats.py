@@ -1,12 +1,22 @@
 import gui
 import video
-from PyQt5 import QtWidgets
+import PyQt5.QtWidgets as qt
+import cv2
 
 def main():
 
-    app = QtWidgets.QApplication([])
-    screen = gui.VideoScreen()
-    screen.show()
+    cap = cv2.VideoCapture('res/BF3 C4 Jet Kill.mp4')
+
+    app = qt.QApplication([])
+    window = gui.AnalysisWindow()
+    screen = gui.VideoScreen(None, cap)
+    #screen.show()
+
+    layout = qt.QGridLayout(window.ui.widget)
+    layout.addWidget(screen)
+    window.ui.widget.setLayout(layout)
+
+    window.show()
     app.exec_()
 
 if __name__ == "__main__":
