@@ -17,6 +17,7 @@ def main():
     window.ui.widget.setLayout(layout)
 
     window.show()
+    screen._timer.start()
     app.exec_()
 
 if __name__ == "__main__":
