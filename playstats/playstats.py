@@ -9,15 +9,14 @@ def main():
 
     app = qt.QApplication([])
     window = gui.AnalysisWindow()
-    screen = gui.VideoScreen(None, cap)
-    #screen.show()
+    screen = gui.VideoPlayer(None, cap)
 
     layout = qt.QGridLayout(window.ui.widget)
     layout.addWidget(screen)
     window.ui.widget.setLayout(layout)
 
     window.show()
-    screen._timer.start()
+    screen.resume()
     app.exec_()
 
 if __name__ == "__main__":

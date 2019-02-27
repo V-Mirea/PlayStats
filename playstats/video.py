@@ -2,7 +2,7 @@ import cv2
 
 
 # Takes a cv.VideoCapture
-class VideoStream:
+class VideoStream(cv2.VideoCapture):
     def __init__(self, src=None):
         self.src = src
 
