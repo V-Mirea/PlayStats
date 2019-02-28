@@ -1,6 +1,5 @@
-from PyQt5 import QtCore
-import numpy as np
+import cv2
 
-#@QtCore.pyqtSlot(np.array)
 def process_frame(frame):
-    pass
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    return frame

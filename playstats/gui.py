@@ -59,7 +59,7 @@ class VideoPlayer(qt.QWidget):
         if self._src.isOpened():
             ret, frame = self._src.read()
         if ret:
-            self._frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            self._frame = frame
             self.newFrame.emit(self._frame)
             self.update()
         else:
