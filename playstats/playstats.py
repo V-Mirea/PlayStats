@@ -1,5 +1,4 @@
 import gui
-import video
 import PyQt5.QtWidgets as qt
 import cv2
 

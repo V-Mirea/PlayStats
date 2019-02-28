@@ -5,7 +5,6 @@ import cv2
 import qimage2ndarray
 
 from analysis_ui import AnalysisWindow_ui
-from video import VideoStream
 from algorithms import process_frame
 from videoplayer_ui import VideoPlayer_ui
 
@@ -28,7 +27,7 @@ class VideoPlayer(qt.QWidget):
         self.ui.setupUi(self)
 
         self._frame = None
-        self._src = VideoStream(src)
+        self._src = src
 
         # This timer will dictate when a new frame should be drawn
         self._timer = QtCore.QTimer(self)
@@ -41,7 +40,7 @@ class VideoPlayer(qt.QWidget):
         self.ui.buttonPause.clicked.connect(self.togglePause)
 
     def rewind(self):
-        self._src.src.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        self._src.set(cv2.CAP_PROP_POS_FRAMES, 0)
         self._getNewFrame()
 
     def resume(self):
@@ -57,9 +56,10 @@ class VideoPlayer(qt.QWidget):
             self.resume()
 
     def _getNewFrame(self):
-        ret, frame = self._src.get_frame()
+        if self._src.isOpened():
+            ret, frame = self._src.read()
         if ret:
-            self._frame = frame  # Todo: make this a copy
+            self._frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self.newFrame.emit(self._frame)
             self.update()
         else:
