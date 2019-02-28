@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import qimage2ndarray
 
-from analysis import AnalysisWindow_ui
+from analysis_ui import AnalysisWindow_ui
 from video import VideoStream
 from algorithms import process_frame
 from videoplayer_ui import VideoPlayer_ui
