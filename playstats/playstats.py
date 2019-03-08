@@ -8,14 +8,7 @@ def main():
 
     app = qt.QApplication([])
     window = gui.AnalysisWindow()
-    screen = gui.VideoPlayer(None, cap)
-
-    layout = qt.QGridLayout(window.ui.widget)
-    layout.addWidget(screen)
-    window.ui.widget.setLayout(layout)
-
     window.show()
-    screen.resume()
     app.exec_()
 
 if __name__ == "__main__":
