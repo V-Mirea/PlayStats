@@ -8,9 +8,17 @@ from analysis_ui import AnalysisWindow_ui
 import algorithms
 from videoplayer_ui import VideoPlayer_ui
 
-class AnalysisWindow(qt.QMainWindow):
-    FILTERS = ["Videos (*.avi *.mp4)", "Images (*.png *.jpg)"]
+FILTERS = {"Videos": [".avi", ".mp4"], "Images": [".png", ".jpg"]}
+FILTERLIST = ""
 
+# Use FILTERS map to make a list of filters for FileDialog
+for key, val in FILTERS.items():
+    if FILTERLIST != "":
+        FILTERLIST += ";;"
+
+    FILTERLIST += key + " (*" + " *".join(val) + ")"
+
+class AnalysisWindow(qt.QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = AnalysisWindow_ui()
@@ -24,19 +32,30 @@ class AnalysisWindow(qt.QMainWindow):
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
 
-        self._screen.setSource("hi")
-
     def browseDirectory(self):
-        fileName, filter = qt.QFileDialog.getOpenFileName(filter=";;".join(self.FILTERS))
+        fileName, filter = qt.QFileDialog.getOpenFileName(filter=FILTERLIST)
         self.ui.txtFileName.setText(fileName)
         self.startAnalysis(filter)
 
+    @QtCore.pyqtSlot()
     def startAnalysis(self, filter=None):
-        if filter == self.FILTERS[0]:  # Video
-            cap = cv2.VideoCapture(self.ui.txtFileName.text())
+        fileName = self.ui.txtFileName.text()
+
+        if filter is None:
+            filterType = None
+            for key in FILTERS.keys():
+                for value in FILTERS[key]:
+                    if fileName.endswith(value):
+                        filterType = key
+        else:
+            filterType = filter[0:filter.index(" (")]
+
+        if filterType == "Videos":
+            cap = cv2.VideoCapture(fileName)
             self._screen.setSource(cap)
-        elif filter ==  self.FILTERS[1]:  # Image
-            pic = cv2.imread(self.ui.txtFileName.text())
+            self._screen.pause()
+        elif filterType == "Images":
+            pic = cv2.imread(fileName)
             self._screen.newFrame.emit(pic)
 
 class VideoPlayer(qt.QWidget):
