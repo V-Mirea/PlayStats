@@ -27,18 +27,32 @@ class AnalysisWindow(qt.QMainWindow):
         self.ui.buttonBrowse.clicked.connect(self.browseDirectory)
         self.ui.buttonStart.clicked.connect(self.startAnalysis)
 
+        # Create and add video player
         self._screen = VideoPlayer(self)
         layout = qt.QGridLayout(self.ui.widget)
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
 
+    @QtCore.pyqtSlot()
     def browseDirectory(self):
+        """
+        Connected to browse button.
+        Opens file dialog and starts analysis on selected item
+        :return: void
+        """
+
         fileName, filter = qt.QFileDialog.getOpenFileName(filter=FILTERLIST)
         self.ui.txtFileName.setText(fileName)
         self.startAnalysis(filter)
 
     @QtCore.pyqtSlot()
     def startAnalysis(self, filter=None):
+        """
+        Parses file name in textbox and sets up video player according to media type
+        :param filter: string when called from browseDirectory
+        :return: void
+        """
+
         fileName = self.ui.txtFileName.text()
 
         if filter is None:
@@ -84,13 +98,27 @@ class VideoPlayer(qt.QWidget):
         self.ui.buttonPause.clicked.connect(self.togglePause)
 
     def rewind(self):
+        """
+        Sets videosource to beginning of stream
+        :return: void
+        """
+
         self._src.set(cv2.CAP_PROP_POS_FRAMES, 0)
         self._getNewFrame()
 
     def play(self):
+        """
+        Starts timer to dictate playing video
+        :return: void
+        """
+
         self._timer.start()
 
     def pause(self):
+        """
+        Stops timer to dictate pausing video
+        :return: void
+        """
         self._timer.stop()
 
     def togglePause(self):
@@ -100,6 +128,12 @@ class VideoPlayer(qt.QWidget):
             self.play()
 
     def _getNewFrame(self):
+        """
+        Gets next frame from source and emits signal, sharing that frame.
+        Pauses playback if no more frames.
+        :return: void
+        """
+
         if self._src.isOpened():
             ret, frame = self._src.read()
         if ret:
@@ -107,11 +141,25 @@ class VideoPlayer(qt.QWidget):
         else:
             self.pause()
 
+    @QtCore.pyqtSlot(np.ndarray)
     def displayFrame(self, frame):
+        """
+        Slot for function handling processing to return processed frame and display it
+        :param frame:
+        :return: void
+        """
+
         self._frame = frame
         self.update()
 
     def paintEvent(self, e):
+        """
+        Override of QWidget function.
+        Paints self._frame across the widget
+        :param e:
+        :return: void
+        """
+
         if self._frame is None:
             return
         painter = QtGui.QPainter(self)
@@ -120,7 +168,6 @@ class VideoPlayer(qt.QWidget):
     def setSource(self, src):
         """
         Sets the video source to src
-
         :param src: cv2.Videocapture object
         :return: void
         """
