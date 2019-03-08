@@ -8,8 +8,6 @@ from analysis_ui import AnalysisWindow_ui
 import algorithms
 from videoplayer_ui import VideoPlayer_ui
 
-algo = algorithms.Algorithms()
-
 class AnalysisWindow(qt.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -44,15 +42,15 @@ class VideoPlayer(qt.QWidget):
 
         self._frame = None
         self._src = src
-        #self.algo = algorithms.Algorithms()
+        self.algo = algorithms.Algorithms()
 
         # This timer will dictate when a new frame should be drawn
         self._timer = QtCore.QTimer(self)
         self._timer.timeout.connect(self._getNewFrame)
         self._timer.setInterval(1000 / self._DEFAULT_FPS)
 
-        self.newFrame.connect(algo.process_frame)
-        algo.frameProcessed.connect(self.displayFrame)
+        self.newFrame.connect(self.algo.process_frame)
+        self.algo.frameProcessed.connect(self.displayFrame)
 
         self.ui.buttonBack.clicked.connect(self.rewind)
         self.ui.buttonPause.clicked.connect(self.togglePause)
