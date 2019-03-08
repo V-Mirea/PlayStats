@@ -9,6 +9,8 @@ import algorithms
 from videoplayer_ui import VideoPlayer_ui
 
 class AnalysisWindow(qt.QMainWindow):
+    FILTERS = ["Videos (*.avi *.mp4)", "Images (*.png *.jpg)"]
+
     def __init__(self):
         super().__init__()
         self.ui = AnalysisWindow_ui()
@@ -22,13 +24,20 @@ class AnalysisWindow(qt.QMainWindow):
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
 
-    def browseDirectory(self):
-        fileName, _ = qt.QFileDialog.getOpenFileName(filter="Images (*.png *.jpg);;Videos (*.avi *.mp4)")
-        self.ui.txtFileName.setText(fileName)
+        self._screen.setSource("hi")
 
-    def startAnalysis(self):
-        cap = cv2.VideoCapture(self.ui.txtFileName.text())
-        self._screen.setSource(cap)
+    def browseDirectory(self):
+        fileName, filter = qt.QFileDialog.getOpenFileName(filter=";;".join(self.FILTERS))
+        self.ui.txtFileName.setText(fileName)
+        self.startAnalysis(filter)
+
+    def startAnalysis(self, filter=None):
+        if filter == self.FILTERS[0]:  # Video
+            cap = cv2.VideoCapture(self.ui.txtFileName.text())
+            self._screen.setSource(cap)
+        elif filter ==  self.FILTERS[1]:  # Image
+            pic = cv2.imread(self.ui.txtFileName.text())
+            self._screen.newFrame.emit(pic)
 
 class VideoPlayer(qt.QWidget):
     _DEFAULT_FPS = 30
@@ -98,7 +107,8 @@ class VideoPlayer(qt.QWidget):
         """
 
         if type(src) is not cv2.VideoCapture:
-            raise TypeError("Given source is type " + type(src).__name__ + ". Expected type cv2.VideoCapture.")
+            raise TypeError("Given source is type " + type(src).__name__ +
+                            ". Expected type " + cv2.VideoCapture.__name__)
 
         self._src = src
         self._getNewFrame()
