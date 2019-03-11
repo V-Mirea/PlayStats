@@ -14,22 +14,25 @@ cycler	0.10.0	0.10.0
 
 kiwisolver	1.0.1	1.0.1
 
-matplotlib	3.0.2	3.0.2
+matplotlib	3.0.2	3.0.3
 
-numpy	1.16.1	1.16.1
+numpy	1.16.1	1.16.2
 
 opencv-python	4.0.0.21	4.0.0.21
 
 pip	19.0.2	19.0.3
 
-
 pyparsing	2.3.1	2.3.1
 
 pyqt5-tools	5.11.3.1.4	5.11.3.1.4
 
+pyqtgraph	0.10.0	0.10.0
+
 python-dateutil	2.8.0	2.8.0
 
 python-dotenv	0.10.1	0.10.1
+
+qimage2ndarray	1.7	1.7
 
 setuptools	40.8.0	40.8.0
 
