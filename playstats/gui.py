@@ -66,8 +66,10 @@ class AnalysisWindow(qt.QMainWindow):
 
         if filterType == "Videos":
             cap = cv2.VideoCapture(fileName)
-            self._screen.setSource(cap)
+            self.ui.statusbar.showMessage("Analyzing video")
+            self._screen.startAnalysis(cap)
             self._screen.pause()
+            self.ui.statusbar.clearMessage()
         elif filterType == "Images":
             pic = cv2.imread(fileName)
             self._screen.newFrame.emit(pic)
@@ -75,35 +77,53 @@ class AnalysisWindow(qt.QMainWindow):
 class VideoPlayer(qt.QWidget):
     _DEFAULT_FPS = 30
 
-    newFrame = QtCore.pyqtSignal(np.ndarray)
-
-    def __init__(self, parent=None, src=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = VideoPlayer_ui()
         self.ui.setupUi(self)
 
         self._frame = None
-        self._src = src
-        self.algo = algorithms.Algorithms()
+        self.algo = None
 
         # This timer will dictate when a new frame should be drawn
         self._timer = QtCore.QTimer(self)
         self._timer.timeout.connect(self._getNewFrame)
         self._timer.setInterval(1000 / self._DEFAULT_FPS)
 
-        self.newFrame.connect(self.algo.process_frame)
-        self.algo.frameProcessed.connect(self.displayFrame)
-
         self.ui.buttonBack.clicked.connect(self.rewind)
         self.ui.buttonPause.clicked.connect(self.togglePause)
 
-    def rewind(self):
+    def startAnalysis(self, videoCapture):
         """
-        Sets videosource to beginning of stream
+        Create algorithms object and start processing the video
+        :param videoCapture: VideoCapture object to process
         :return: void
         """
 
-        self._src.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        self.algo = algorithms.Algorithms(videoCapture)
+        self.algo.processVideo()
+        self._getNewFrame()
+
+    def _getNewFrame(self):
+        """
+        Grab next frame from processed video
+        Pause timer if no new frames
+        :return: void
+        """
+        frame = self.algo.processedVideo.getNextFrame()
+        if frame is None:
+            self.pause()
+        else:
+            self._frame = frame
+            self.update()
+
+    def rewind(self):
+        """
+        Sets processed video to beginning of stream
+        :return: void
+        """
+
+        self.algo.processedVideo.index = 0
         self._getNewFrame()
 
     def play(self):
@@ -127,31 +147,6 @@ class VideoPlayer(qt.QWidget):
         else:
             self.play()
 
-    def _getNewFrame(self):
-        """
-        Gets next frame from source and emits signal, sharing that frame.
-        Pauses playback if no more frames.
-        :return: void
-        """
-
-        if self._src.isOpened():
-            ret, frame = self._src.read()
-        if ret:
-            self.newFrame.emit(frame)
-        else:
-            self.pause()
-
-    @QtCore.pyqtSlot(np.ndarray)
-    def displayFrame(self, frame):
-        """
-        Slot for function handling processing to return processed frame and display it
-        :param frame:
-        :return: void
-        """
-
-        self._frame = frame
-        self.update()
-
     def paintEvent(self, e):
         """
         Override of QWidget function.
@@ -164,17 +159,3 @@ class VideoPlayer(qt.QWidget):
             return
         painter = QtGui.QPainter(self)
         painter.drawImage(QtCore.QPoint(0, 0), qimage2ndarray.array2qimage(cv2.resize(self._frame, (self.geometry().width(), self.geometry().height()))))
-
-    def setSource(self, src):
-        """
-        Sets the video source to src
-        :param src: cv2.Videocapture object
-        :return: void
-        """
-
-        if type(src) is not cv2.VideoCapture:
-            raise TypeError("Given source is type " + type(src).__name__ +
-                            ". Expected type " + cv2.VideoCapture.__name__)
-
-        self._src = src
-        self._getNewFrame()

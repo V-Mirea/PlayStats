@@ -1,23 +1,32 @@
+from psvideo import PSVideo
+
 import cv2
 from PyQt5 import QtCore
 import numpy as np
 
 
 class Algorithms(QtCore.QObject):
-    frameProcessed = QtCore.pyqtSignal(np.ndarray)
 
-
-    def process_frame(self, frame):
+    def __init__(self, originalVideo):
+        """
+        :param originalVideo:  VideoCapture of video to process
         """
 
-        :param frame: numpy ndarray in BGR format
-        :return:
+        self.originalVideo = originalVideo
+        self.processedVideo = PSVideo()
+
+    # Todo: make this async
+    def processVideo(self):
+        """
+        Processes original video stream and populates processedVideo with data
+        :return: void
         """
 
+        if self.originalVideo.isOpened():
+            ret, frame = self.originalVideo.read()
 
+            while ret is True:
+                processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                self.processedVideo.addNextFrame(processedFrame)
 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        self.frameProcessed.emit(frame)
-
-    def testing(self):
-        print("ey")
+                ret, frame = self.originalVideo.read()
