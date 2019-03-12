@@ -55,7 +55,7 @@ class AnalysisWindow(qt.QMainWindow):
 
         fileName = self.ui.txtFileName.text()
 
-        if filter is None:
+        if filter is None or filter == "":
             filterType = None
             for key in FILTERS.keys():
                 for value in FILTERS[key]:
