@@ -3,6 +3,7 @@ from PyQt5 import QtGui, QtCore
 import numpy as np
 import cv2
 import qimage2ndarray
+import threading
 
 from analysis_ui import AnalysisWindow_ui
 import algorithms
@@ -109,8 +110,12 @@ class VideoPlayer(qt.QWidget):
         """
 
         self.algo = algorithms.Algorithms(videoCapture, game)
-        self.algo.processVideo()
-        self._getNewFrame()
+
+        self._frame = cv2.cvtColor(videoCapture.read()[1], cv2.COLOR_BGR2RGB)
+        self.update()
+
+        t = threading.Thread(target=self.algo.processVideo)
+        t.start()
 
     def _getNewFrame(self):
         """
@@ -120,7 +125,10 @@ class VideoPlayer(qt.QWidget):
         """
         frame = self.algo.processedVideo.getNextFrame()
         if frame is None:
-            self.pause()
+            if self.algo.processing:
+                pass  # Todo: do something here?
+            else:
+                self.pause()
         else:
             self._frame = frame
             self.update()
