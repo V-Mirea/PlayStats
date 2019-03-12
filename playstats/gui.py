@@ -64,15 +64,22 @@ class AnalysisWindow(qt.QMainWindow):
         else:
             filterType = filter[0:filter.index(" (")]
 
+        game = self.getGame()
+
         if filterType == "Videos":
             cap = cv2.VideoCapture(fileName)
             self.ui.statusbar.showMessage("Analyzing video")
-            self._screen.startAnalysis(cap)
+            self._screen.startAnalysis(cap, game)
             self._screen.pause()
             self.ui.statusbar.clearMessage()
         elif filterType == "Images":
             pic = cv2.imread(fileName)
             self._screen.newFrame.emit(pic)
+
+    def getGame(self):
+        game = self.ui.comboGame.currentText()
+        if game == "Counter Strike: Global Offensive":
+            return algorithms.Games.CSGO
 
 class VideoPlayer(qt.QWidget):
     _DEFAULT_FPS = 30
@@ -93,14 +100,15 @@ class VideoPlayer(qt.QWidget):
         self.ui.buttonBack.clicked.connect(self.rewind)
         self.ui.buttonPause.clicked.connect(self.togglePause)
 
-    def startAnalysis(self, videoCapture):
+    def startAnalysis(self, videoCapture, game):
         """
         Create algorithms object and start processing the video
         :param videoCapture: VideoCapture object to process
+        :param game: Games enum representing game in video
         :return: void
         """
 
-        self.algo = algorithms.Algorithms(videoCapture)
+        self.algo = algorithms.Algorithms(videoCapture, game)
         self.algo.processVideo()
         self._getNewFrame()
 
