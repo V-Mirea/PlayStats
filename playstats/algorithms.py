@@ -58,4 +58,11 @@ class PSFeatures:
         if game is None:
             self.regions = {}
         elif game is Games.CSGO:
-            self.regions = {"health": ((0, int(height*.9416)), ((int(width*.2198)), height-1))}
+            self.regions = {
+                "health":
+                    ((0, int(height*0.9416)),
+                     (int(width*0.2198), height-1)),
+                "money":
+                    ((int(width*0.0099), int(height*0.3259)),
+                     (int(width*0.0896), int(height*0.3703)))
+            }
