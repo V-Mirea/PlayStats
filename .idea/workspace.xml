@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7b3b52e-d079-474a-99ba-dba5ef2bc049" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +39,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/playstats/algorithms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="50" column="39" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
+            <state relative-caret-position="172">
+              <caret line="58" column="70" selection-start-line="58" selection-start-column="70" selection-end-line="58" selection-end-column="70" />
             </state>
           </provider>
         </entry>
@@ -103,9 +103,9 @@
         <option value="$PROJECT_DIR$/playstats/playstats.py" />
         <option value="$PROJECT_DIR$/playstats/psvideo.py" />
         <option value="$PROJECT_DIR$/playstats/gui.py" />
-        <option value="$PROJECT_DIR$/playstats/algorithms.py" />
         <option value="$PROJECT_DIR$/tests/TestOpenCV.py" />
         <option value="$PROJECT_DIR$/playstats/psanalyst.py" />
+        <option value="$PROJECT_DIR$/playstats/algorithms.py" />
       </list>
     </option>
   </component>
@@ -168,7 +168,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.tests">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python">
       <module name="PlayStats" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -259,7 +259,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Python Console" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5168539" side_tool="true" visible="true" weight="0.32719547" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5168539" side_tool="true" weight="0.32719547" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -388,8 +388,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/playstats/algorithms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="50" column="39" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
+        <state relative-caret-position="172">
+          <caret line="58" column="70" selection-start-line="58" selection-start-column="70" selection-end-line="58" selection-end-column="70" />
         </state>
       </provider>
     </entry>
