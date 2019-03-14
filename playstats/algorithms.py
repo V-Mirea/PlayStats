@@ -58,8 +58,6 @@ class PSVideoData(QtCore.QObject):
                 for key, region in features.regions.items():
                     cv2.rectangle(frame, region[0], region[1], 255, 2)
 
-                #print(pytesseract.image_to_string(self.getImageRegion(frame, features.regions["health"])))
-
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.processedVideo.addNextFrame(processedFrame)
 
