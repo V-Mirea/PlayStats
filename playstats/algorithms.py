@@ -25,7 +25,7 @@ def getImageRegion(img, region):
 
     return img[top:bottom, left:right]
 
-class Algorithms(QtCore.QObject):
+class PSVideoData(QtCore.QObject):
 
     def __init__(self, originalVideo, game):
         """

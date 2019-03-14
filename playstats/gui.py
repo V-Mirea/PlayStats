@@ -109,7 +109,7 @@ class VideoPlayer(qt.QWidget):
         :return: void
         """
 
-        self.algo = algorithms.Algorithms(videoCapture, game)
+        self.algo = algorithms.PSVideoData(videoCapture, game)
 
         self._frame = cv2.cvtColor(videoCapture.read()[1], cv2.COLOR_BGR2RGB)
         self.update()
