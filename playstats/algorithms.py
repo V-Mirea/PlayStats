@@ -12,6 +12,19 @@ import pytesseract
 class Games(Enum):
     CSGO = 1
 
+def getImageRegion(img, region):
+    """
+    :param img: numpy ndarray
+    :param region: ((topleft x, topleft y), (bottomright x, bottomright y))
+    :return: numpy ndarray of that region
+    """
+
+    topleft, bottomright = region
+    left, top = topleft
+    right, bottom = bottomright
+
+    return img[top:bottom, left:right]
+
 class Algorithms(QtCore.QObject):
 
     def __init__(self, originalVideo, game):
@@ -54,16 +67,6 @@ class Algorithms(QtCore.QObject):
 
         print("finished")
         self.processing = False
-
-    def getImageRegion(self, img, region):
-        topleft, bottomright = region
-
-        left, top = topleft
-        right, bottom = bottomright
-        width = right - left
-        height = bottom - top
-
-        return img[top:bottom, left:right]
 
 class PSFeatures:
     def __init__(self, screenSize, game=None):
