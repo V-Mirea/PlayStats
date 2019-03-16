@@ -3,11 +3,7 @@ from psvideo import PSVideo
 import cv2
 from PyQt5 import QtCore
 import numpy as np
-
 from enum import Enum
-import time
-from PIL import Image
-import pytesseract
 
 class Games(Enum):
     CSGO = 1
