@@ -21,6 +21,67 @@ def getImageRegion(img, region):
 
     return img[top:bottom, left:right]
 
+def createMask(maskSize, regionOfInterest):
+    """
+    :param maskSize: (w, h)
+    :param regionOfInterest: ((topleft x, topleft y), (bottomright x, bottomright y))
+    :return: greyscale image masking region of interest
+    """
+
+    w, h = maskSize
+
+    mask = np.zeros((h, w), dtype=np.uint8)
+
+    topleft, bottomright = regionOfInterest
+    left, top = topleft
+    right, bottom = bottomright
+
+    mask[top:bottom, left:right] = 255
+
+    return mask
+
+def multiscaleMatchTemplate(image, template, method):
+    """
+    :param image: ndarray representing source image
+    :param template:  ndarray representing template to search for
+    :param method: OpenCV matchTemplate comparison method
+    :return: return region representing location of template in image
+    """
+
+    match = None
+
+    for scale in np.linspace(0.2, 2, 20):
+        resized = cv2.resize(template, None, fx=scale, fy=scale)
+
+        if resized.shape[0] > image.shape[0] or resized.shape[1] > image.shape[1]:
+            break
+
+        matches = cv2.matchTemplate(image, resized, method)
+        _, maxVal, _, maxLoc = cv2.minMaxLoc(matches)
+
+        if match is None or maxVal > match[0]:
+            match = (maxVal, maxLoc, scale)
+
+    if match is None:
+        return None
+
+    _, maxLoc, scale = match
+    tempH = int(template.shape[0] * scale)
+    tempW = int(template.shape[1] * scale)
+    locX, locY = maxLoc
+
+    return (locX, locY), (locX + tempW, locY + tempH)
+
+def translateMaskRegion(region, maskRegion):
+    """
+    :param region: region in terms of maskRegion
+    :param maskRegion: region of original picture
+    :return: region representing 'region' in the original picture
+    """
+
+    return (maskRegion[0][0] + region[0][0], maskRegion[0][1] + region[0][1]), \
+           (maskRegion[0][0] + region[1][0], maskRegion[0][1] + region[1][1])
+
 class PSVideoData(QtCore.QObject):
 
     def __init__(self, originalVideo, game):
