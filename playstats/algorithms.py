@@ -8,16 +8,17 @@ from enum import Enum
 class Games(Enum):
     CSGO = 1
 
-def getImageRegion(img, region):
+def getImageRegion(img, region): #
     """
     :param img: numpy ndarray
     :param region: ((topleft x, topleft y), (bottomright x, bottomright y))
     :return: numpy ndarray of that region
     """
 
-    topleft, bottomright = region
-    left, top = topleft
-    right, bottom = bottomright
+    left = region.top_left.x
+    top = region.top_left.y
+    right = region.bottom_right.x
+    bottom = region.bottom_right.y
 
     return img[top:bottom, left:right]
 
@@ -32,9 +33,10 @@ def createMask(maskSize, regionOfInterest):
 
     mask = np.zeros((h, w), dtype=np.uint8)
 
-    topleft, bottomright = regionOfInterest
-    left, top = topleft
-    right, bottom = bottomright
+    left = regionOfInterest.top_left.x
+    top = regionOfInterest.top_left.y
+    right = regionOfInterest.bottom_right.x
+    bottom = regionOfInterest.bottom_right.y
 
     mask[top:bottom, left:right] = 255
 
@@ -72,15 +74,15 @@ def multiscaleMatchTemplate(image, template, method):
 
     return (locX, locY), (locX + tempW, locY + tempH)
 
-def translateMaskRegion(region, maskRegion):
+def translateMaskRegion(region, maskRegion): # Todo: Needs tested
     """
     :param region: region in terms of maskRegion
     :param maskRegion: region of original picture
     :return: region representing 'region' in the original picture
     """
 
-    return (maskRegion[0][0] + region[0][0], maskRegion[0][1] + region[0][1]), \
-           (maskRegion[0][0] + region[1][0], maskRegion[0][1] + region[1][1])
+    return ImageRegion(maskRegion.top_left.x + region.top_left.x, maskRegion.top_left.y + region.top_left.y,
+                       maskRegion.top_left.x + region.bottom_right.x, maskRegion.top_left.y + region.bottom_right.y)
 
 class PSVideoData(QtCore.QObject):
 
@@ -113,7 +115,7 @@ class PSVideoData(QtCore.QObject):
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                 for key, region in features.regions.items():
-                    cv2.rectangle(frame, region[0], region[1], 255, 2)
+                    cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
 
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.processedVideo.addNextFrame(processedFrame)
@@ -137,27 +139,29 @@ class PSFeatures:
             self.regions = {}
         elif game is Games.CSGO:
             self.regions = {
-                "health":
-                    ((int(width*0.0285), int(height*0.9546)),
-                     (int(width*0.0625), height-1)),
-                "armor":
-                    ((int(width*0.1354), int(height*0.9546)),
-                     (int(width*0.1708), height-1)),
-                "money":
-                    ((int(width*0.0099), int(height*0.3259)),
-                     (int(width*0.0896), int(height*0.3703)))
+                "health": ImageRegion(int(width*0.0285), int(height*0.9546),
+                                      int(width*0.0625), height-1),
+                "armor": ImageRegion(int(width*0.1354), int(height*0.9546),
+                                     int(width*0.1708), height-1),
+                "money": ImageRegion(int(width*0.0099), int(height*0.3259),
+                                     int(width*0.0896), int(height*0.3703))
             }
 
 class ImageRegion:
     # Todo: error check
     def __init__(self, top_left_x, top_left_y, bottom_right_x=None, bottom_right_y=None, width=None, height=None):
-        self.top_left = (top_left_x, top_left_y)
+        self.top_left = Coords(top_left_x, top_left_y)
 
         if bottom_right_x and bottom_right_y:
-            self.bottom_right = (bottom_right_x, bottom_right_y)
-            self.width = self.bottom_right[0] - self.top_left[0]
-            self.height = self.bottom_right[1] - self.top_left[1]
+            self.bottom_right = Coords(bottom_right_x, bottom_right_y)
+            self.width = self.bottom_right.x - self.top_left.x
+            self.height = self.bottom_right.y - self.top_left.y
         elif width and height:
-            self.bottom_right = (top_left_x+width, top_left_y+height)
+            self.bottom_right = Coords(top_left_x+width, top_left_y+height)
             self.width = width
             self.height = height
+
+class Coords:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
