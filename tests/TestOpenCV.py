@@ -10,6 +10,43 @@ class TestOpenCV(unittest.TestCase):
         #self.testImage = cv2.imread("res/csgo_screen.jpg")
         pass
 
+    def test_getImageRegion(self):
+        image = cv2.imread("res/csgo_screen.jpg")
+        shape = image.shape[1::-1]
+        features = PSFeatures(shape, Games.CSGO)
+        region = features.regions['health']
+        region_image = getImageRegion(image, region)
+
+        self.assertSequenceEqual(region_image.tolist(),
+                                 image[region.top_left.y:region.bottom_right.y,
+                                       region.top_left.x:region.bottom_right.x]
+                                 .tolist())
+
+    def test_createMask(self):
+        image = cv2.imread("res/csgo_screen.jpg")
+        shape = image.shape[1::-1]
+        features = PSFeatures(shape, Games.CSGO)
+        region = features.regions['health']
+
+        mask = createMask(shape, region)
+        foreground = getImageRegion(mask, region)
+
+        maskOk = True
+        for pixel in foreground.flatten():
+            if pixel != 255:
+                maskOk = False
+                break
+
+        if maskOk:
+            numWhite = 0
+            for pixel in mask.flatten():
+                if pixel == 255:
+                    numWhite += 1
+            if numWhite != len(foreground.flatten()):
+                maskOk = False
+
+        self.assertTrue(maskOk)
+
     # def test_templates(self):
     #     """ Not a real test. Just testing features"""
     #
@@ -28,10 +65,13 @@ class TestOpenCV(unittest.TestCase):
     #     cv2.imshow("orig", orig)
     #     cv2.waitKey()
 
-    def test_charDictionary(self):
-        dic = character_parsing.FontDictionary()
-        dic.parse_json_dictionary("res/fonts/hud")
-        dic
+    def test_Parser(self):
+        feat = PSFeatures((1920, 1080), Games.CSGO)
+        img = cv2.imread("res/csgo_screen.jpg")
+        region = getImageRegion(img, feat.regions['health'])
+        parser = character_parsing.Parser(region)
+        parser.findNumberOfCharacters()
+
 
 if __name__ == '__main__':
     unittest.main()
