@@ -25,3 +25,17 @@ class FontCharacter:
         self.path = path_to_img
         self.img = cv2.imread(path_to_img)
         self.group = group
+
+class Parser:
+    def __init__(self, roi):
+        self.img = roi
+
+    def findNumberOfCharacters(self):
+        orig = self.img.copy()
+        gray = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(gray, 300, 300)
+        _, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+
+        for i in range(0, len(contours)):
+            x, y, w, h = cv2.boundingRect(contours[i])
