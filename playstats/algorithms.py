@@ -161,6 +161,20 @@ class ImageRegion:
             self.width = width
             self.height = height
 
+    def overlaps(self, region):
+        """
+        :param region: ImageRegion to test against
+        :return: bool if region overlaps given region
+        """
+
+        dx = min(self.bottom_right.x, region.bottom_right.x) - max(self.top_left.x, region.top_left.x)
+        dy = min(self.bottom_right.y, region.bottom_right.y) - max(self.top_left.y, region.top_left.y)
+
+        if (dx <= 0) and (dy <= 0):
+            return False
+        else:
+            return True
+
 class Coords:
     def __init__(self, x, y):
         self.x = x
