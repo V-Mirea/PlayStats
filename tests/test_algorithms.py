@@ -42,3 +42,16 @@ class TestAlgorithms(unittest.TestCase):
                 maskOk = False
 
         self.assertTrue(maskOk)
+
+    def test_region_overlaps(self):
+        a = ImageRegion(0, 0, 10, 10)
+        b = ImageRegion(1, 1, 9, 9)
+        self.assertTrue(a.overlaps(b))
+
+        a = ImageRegion(0, 0, 10, 10)
+        b = ImageRegion(5, 5, 15, 15)
+        self.assertTrue(a.overlaps(b))
+
+        c = ImageRegion(0, 0, 10, 10)
+        d = ImageRegion(15, 15, 25, 25)
+        self.assertFalse(c.overlaps(d))
