@@ -147,3 +147,17 @@ class PSFeatures:
                     ((int(width*0.0099), int(height*0.3259)),
                      (int(width*0.0896), int(height*0.3703)))
             }
+
+class ImageRegion:
+    # Todo: error check
+    def __init__(self, top_left_x, top_left_y, bottom_right_x=None, bottom_right_y=None, width=None, height=None):
+        self.top_left = (top_left_x, top_left_y)
+
+        if bottom_right_x and bottom_right_y:
+            self.bottom_right = (bottom_right_x, bottom_right_y)
+            self.width = self.bottom_right[0] - self.top_left[0]
+            self.height = self.bottom_right[1] - self.top_left[1]
+        elif width and height:
+            self.bottom_right = (top_left_x+width, top_left_y+height)
+            self.width = width
+            self.height = height
