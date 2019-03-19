@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7b3b52e-d079-474a-99ba-dba5ef2bc049" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/playstats/character_parsing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_algorithms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PlayStats.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PlayStats.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/TestOpenCV.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/TestOpenCV.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/playstats/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/playstats/algorithms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/playstats/character_parsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/playstats/character_parsing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/TestOpenCV.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +33,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/playstats/gui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2091">
+            <state relative-caret-position="291">
               <caret line="132" column="31" selection-start-line="132" selection-start-column="31" selection-end-line="132" selection-end-column="31" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
@@ -41,26 +45,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/playstats/algorithms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1124">
-              <caret line="119" selection-start-line="119" selection-end-line="119" />
+            <state relative-caret-position="782">
+              <caret line="51" selection-start-line="51" selection-end-line="51" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/playstats/psvideo.py">
+        <entry file="file://$PROJECT_DIR$/tests/test_main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" selection-start-line="21" selection-end-line="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/TestOpenCV.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="33" selection-start-line="33" selection-end-line="33" />
+            <state relative-caret-position="493">
+              <caret line="32" column="39" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -68,14 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/playstats/character_parsing.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tests/test_algorithms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="26" lean-forward="true" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="26" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="17">
+              <caret line="1" column="10" lean-forward="true" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -94,6 +86,7 @@
       <find>algo</find>
       <find>FILTERS</find>
       <find>_src</find>
+      <find>createM</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -119,15 +112,16 @@
         <option value="$PROJECT_DIR$/playstats/gui.py" />
         <option value="$PROJECT_DIR$/playstats/psanalyst.py" />
         <option value="$PROJECT_DIR$/tests/helper.py" />
+        <option value="$PROJECT_DIR$/playstats/character_parsing.py" />
         <option value="$PROJECT_DIR$/playstats/algorithms.py" />
         <option value="$PROJECT_DIR$/tests/TestOpenCV.py" />
-        <option value="$PROJECT_DIR$/playstats/character_parsing.py" />
+        <option value="$PROJECT_DIR$/tests/test_algorithms.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
     <option name="width" value="1920" />
     <option name="height" value="1040" />
   </component>
@@ -136,7 +130,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -149,10 +142,16 @@
               <item name="PlayStats" type="462c0819:PsiDirectoryNode" />
               <item name="playstats" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="PlayStats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PlayStats" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -264,14 +263,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12888302" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49894625" weight="0.32936078" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.48314014" weight="0.32719547" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.48472077" visible="true" weight="0.4036827" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48314014" visible="true" weight="0.32719547" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.48472077" weight="0.4036827" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -286,15 +286,6 @@
     </layout>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/tests/TestOpenCV.py</url>
-          <line>33</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="corners[0:1080] " />
@@ -369,6 +360,7 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tests/helper.py" />
     <entry file="file://$PROJECT_DIR$/playstats/playstats.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -379,24 +371,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/playstats/gui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2091">
-          <caret line="132" column="31" selection-start-line="132" selection-start-column="31" selection-end-line="132" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/helper.py" />
-    <entry file="file://$PROJECT_DIR$/playstats/algorithms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1124">
-          <caret line="119" selection-start-line="119" selection-end-line="119" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/playstats/psvideo.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -404,23 +378,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/playstats/gui.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="132" column="31" selection-start-line="132" selection-start-column="31" selection-end-line="132" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playstats/algorithms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/playstats/character_parsing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="26" lean-forward="true" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="26" />
+        <state relative-caret-position="187">
+          <caret line="11" column="42" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/TestOpenCV.py">
+    <entry file="file://$PROJECT_DIR$/tests/test_main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
+        <state relative-caret-position="493">
+          <caret line="32" column="39" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_algorithms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="10" lean-forward="true" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
         </state>
       </provider>
     </entry>

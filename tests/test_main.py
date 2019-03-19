@@ -31,7 +31,6 @@ class TestThrowAways(unittest.TestCase):
         region = getImageRegion(img, feat.regions['health'])
         parser = character_parsing.Parser(region)
         parser.findNumberOfCharacters()
-        print("test")
 
 
 if __name__ == '__main__':
