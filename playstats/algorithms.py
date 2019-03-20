@@ -161,6 +161,9 @@ class ImageRegion:
             self.width = width
             self.height = height
 
+    def area(self):
+        return self.width * self.height
+
     def overlaps(self, region):
         """
         :param region: ImageRegion to test against
@@ -170,10 +173,10 @@ class ImageRegion:
         dx = min(self.bottom_right.x, region.bottom_right.x) - max(self.top_left.x, region.top_left.x)
         dy = min(self.bottom_right.y, region.bottom_right.y) - max(self.top_left.y, region.top_left.y)
 
-        if (dx <= 0) and (dy <= 0):
-            return False
-        else:
+        if (dx >= 0) and (dy >= 0):
             return True
+        else:
+            return False
 
 class Coords:
     def __init__(self, x, y):
