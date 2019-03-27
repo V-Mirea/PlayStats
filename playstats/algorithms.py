@@ -4,6 +4,9 @@ import cv2
 from PyQt5 import QtCore
 import numpy as np
 from enum import Enum
+from collections import namedtuple
+
+Coords = namedtuple("Coords", "x y")
 
 class Games(Enum):
     CSGO = 1
@@ -84,47 +87,6 @@ def translateMaskRegion(region, maskRegion): # Todo: Needs tested
     return ImageRegion(maskRegion.top_left.x + region.top_left.x, maskRegion.top_left.y + region.top_left.y,
                        maskRegion.top_left.x + region.bottom_right.x, maskRegion.top_left.y + region.bottom_right.y)
 
-class PSVideoData(QtCore.QObject):
-
-    def __init__(self, originalVideo, game):
-        """
-        :param originalVideo:  VideoCapture of video to process
-        :param game: Games enum representing game in video
-        """
-
-        self.originalVideo = originalVideo
-        self.processedVideo = PSVideo()
-        self.game = game
-        self.processing = False
-
-    def processVideo(self):
-        """
-        Processes original video stream and populates processedVideo with data
-        Runs asynchronously
-        :return: void
-        """
-
-        self.processing = True
-        if self.originalVideo.isOpened():
-            ret, frame = self.originalVideo.read()
-            fshape = frame.shape[1::-1]
-
-            features = PSFeatures(fshape, self.game)
-
-            while ret is True:
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-                for key, region in features.regions.items():
-                    cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
-
-                processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.processedVideo.addNextFrame(processedFrame)
-
-                ret, frame = self.originalVideo.read()
-
-        print("finished")
-        self.processing = False
-
 class PSFeatures:
     def __init__(self, screenSize, game=None):
         """
@@ -177,8 +139,3 @@ class ImageRegion:
             return True
         else:
             return False
-
-class Coords:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y

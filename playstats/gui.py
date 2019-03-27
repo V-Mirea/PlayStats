@@ -8,6 +8,7 @@ import threading
 from analysis_ui import AnalysisWindow_ui
 import algorithms
 from videoplayer_ui import VideoPlayer_ui
+from psvideo import PSVideo
 
 FILTERS = {"Videos": [".avi", ".mp4"], "Images": [".png", ".jpg"]}
 FILTERLIST = ""
@@ -33,6 +34,8 @@ class AnalysisWindow(qt.QMainWindow):
         layout = qt.QGridLayout(self.ui.widget)
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
+
+    ## Button events ##
 
     @QtCore.pyqtSlot()
     def browseDirectory(self):
@@ -77,6 +80,8 @@ class AnalysisWindow(qt.QMainWindow):
             pic = cv2.imread(fileName)
             self._screen.newFrame.emit(pic)
 
+    ## Other methods ##
+
     def getGame(self):
         game = self.ui.comboGame.currentText()
         if game == "Counter Strike: Global Offensive":
@@ -91,7 +96,7 @@ class VideoPlayer(qt.QWidget):
         self.ui.setupUi(self)
 
         self._frame = None
-        self.algo = None
+        self.video = None
 
         # This timer will dictate when a new frame should be drawn
         self._timer = QtCore.QTimer(self)
@@ -109,12 +114,12 @@ class VideoPlayer(qt.QWidget):
         :return: void
         """
 
-        self.algo = algorithms.PSVideoData(videoCapture, game)
+        self.video = PSVideo(videoCapture, game)
 
         self._frame = cv2.cvtColor(videoCapture.read()[1], cv2.COLOR_BGR2RGB)
         self.update()
 
-        t = threading.Thread(target=self.algo.processVideo)
+        t = threading.Thread(target=self.video.processVideo)
         t.start()
 
     def _getNewFrame(self):
@@ -123,9 +128,9 @@ class VideoPlayer(qt.QWidget):
         Pause timer if no new frames
         :return: void
         """
-        frame = self.algo.processedVideo.getNextFrame()
+        frame = self.video.getNextFrame()
         if frame is None:
-            if self.algo.processing:
+            if self.video.processing:
                 pass  # Todo: do something here?
             else:
                 self.pause()
@@ -139,7 +144,7 @@ class VideoPlayer(qt.QWidget):
         :return: void
         """
 
-        self.algo.processedVideo.index = 0
+        self.video.videoIndex = 0
         self._getNewFrame()
 
     def play(self):
