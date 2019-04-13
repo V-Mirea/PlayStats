@@ -8,7 +8,7 @@ import threading
 from analysis_ui import AnalysisWindow_ui
 import algorithms
 from videoplayer_ui import VideoPlayer_ui
-from psvideo import PSVideo
+from psvideo import *
 
 FILTERS = {"Videos": [".avi", ".mp4"], "Images": [".png", ".jpg"]}
 FILTERLIST = ""
@@ -114,7 +114,7 @@ class VideoPlayer(qt.QWidget):
         :return: void
         """
 
-        self.video = PSVideo(videoCapture, game)
+        self.video = makePSVideo(videoCapture, game)
 
         self._frame = cv2.cvtColor(videoCapture.read()[1], cv2.COLOR_BGR2RGB)
         self.update()
