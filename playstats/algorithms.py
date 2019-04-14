@@ -1,10 +1,11 @@
-from psvideo import PSVideo
+from psvideo import *
 
 import cv2
 from PyQt5 import QtCore
 import numpy as np
 from enum import Enum
 from collections import namedtuple
+from operator import itemgetter
 
 Coords = namedtuple("Coords", "x y")
 
@@ -97,9 +98,7 @@ class PSFeatures:
 
         width, height = screenSize
 
-        if game is None:
-            self.regions = {}
-        elif game is Games.CSGO:
+        if game is Games.CSGO:
             self.regions = {
                 "health": ImageRegion(int(width*0.0285), int(height*0.9546),
                                       int(width*0.0625), height-1),
@@ -108,6 +107,8 @@ class PSFeatures:
                 "money": ImageRegion(int(width*0.0099), int(height*0.3259),
                                      int(width*0.0896), int(height*0.3703))
             }
+        else:
+            self.regions = {}
 
 class ImageRegion:
     # Todo: error check
@@ -139,3 +140,23 @@ class ImageRegion:
             return True
         else:
             return False
+
+def findPrevalentColors(images, n=1):
+    """
+    :param images: list of ndarray images in any format
+    :param n: number of colors to find
+    :return: list most frequently occuring n colors from the images
+                from most frequent to less frequent
+    """
+
+    colors = []
+
+    for image in images:
+        for pixel in image.reshape(-1, image.shape[-1]):  # Flatten to 1D array of arrays
+            if any((c["color"] == pixel).all() for c in colors):  # If pixel color already found
+                next(c for c in colors if (c["color"] == pixel).all())["occurrences"] += 1  # Increase occurrences by 1
+            else:
+                colors.append({"color": pixel, "occurrences": 1})  # Else add it to the list
+
+    colors = sorted(colors, key=itemgetter('occurrences'), reverse=True)  # Sort from most to least common
+    return colors[:n]  # Return n most common

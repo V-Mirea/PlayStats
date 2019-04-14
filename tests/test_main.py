@@ -2,6 +2,7 @@ import unittest
 import cv2
 
 from test_algorithms import *
+from test_psvideo import *
 
 import character_parsing
 
@@ -24,19 +25,13 @@ class TestThrowAways(unittest.TestCase):
     #
     #     cv2.imshow("orig", orig)
     #     cv2.waitKey()
-
-    def test_Parser(self):
-        feat = PSFeatures((1920, 1080), Games.CSGO)
-        img = cv2.imread("res/csgo_screen.jpg")
-        region = getImageRegion(img, feat.regions['health'])
-        parser = character_parsing.Parser(region)
-        parser.findNumberOfCharacters()
+    pass
 
 
 if __name__ == '__main__':
     # Run only the tests in the specified classes
 
-    test_classes_to_run = [TestAlgorithms, TestThrowAways]
+    test_classes_to_run = [TestThrowAways, TestAlgorithms, TestPSVideo]
 
     loader = unittest.TestLoader()
 
