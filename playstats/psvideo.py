@@ -21,6 +21,9 @@ class PSVideo:
         self.processedFrames = []  # Stores frames in RGB format
         self.videoIndex = 0
 
+    @abstractmethod
+    def preprocess(self):
+        pass
 
     @abstractmethod
     def processVideo(self):
@@ -46,11 +49,11 @@ class PSVideo:
 
         return None
 
-
 class CSGOVideo(PSVideo):
     def __init__(self, originalVideo):
         super().__init__(originalVideo)
         self.game = algorithms.Games.CSGO
+        self.text_color = None
 
     def processVideo(self):
         self.processing = True
@@ -67,8 +70,8 @@ class CSGOVideo(PSVideo):
                 for key, region in features.regions.items():
                     cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
 
-                #health_region = algorithms.getImageRegion(frame, features.regions["health"])
-                #print(character_parsing.findNumberOfCharacters(health_region))
+                health_region = algorithms.getImageRegion(frame, features.regions["armor"])
+                print(character_parsing.findNumberOfCharacters(health_region))
 
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.addNextFrame(processedFrame)
