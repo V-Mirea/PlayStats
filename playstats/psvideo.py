@@ -70,8 +70,12 @@ class CSGOVideo(PSVideo):
                 for key, region in features.regions.items():
                     cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
 
-                health_region = algorithms.getImageRegion(frame, features.regions["armor"])
-                print(character_parsing.findNumberOfCharacters(health_region))
+                health_region = algorithms.getImageRegion(frame, features.regions["health"])
+                dictionary = character_parsing.FontDictionary()
+                dictionary.parse_json_dictionary("F:\\Users\\Vlad\\Programming\\PlayStats\\tests\\res\\fonts\\hud")
+
+                characters = character_parsing.findNumberOfCharacters(health_region)
+                character_parsing.readText(health_region, characters, dictionary)
 
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.addNextFrame(processedFrame)

@@ -5,14 +5,27 @@ import numpy as np
 
 import algorithms
 
-def readText(roi, dictionary):
+def readText(roi, contours, dictionary):
     """
     :param roi: ndarray opencv image
+    :param contours: list of regions, each containing a character (findNumberOfCharacters)
     :param dictionary: FontDictionary with possible characters
     :return: string containing read text
     """
 
+    roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("roi", roi)
 
+    print("start frame")
+    for region in contours:
+        img_region = None
+        img_region = algorithms.getImageRegion(roi, region)
+
+        for key, value in dictionary.items():
+            template = cv2.imread(value.path, 0)
+            if algorithms.multiscaleMatchTemplate(img_region, template) is not None:
+                print("found " + key)
+                break
 
 def findNumberOfCharacters(img):
     """
@@ -55,7 +68,7 @@ def findNumberOfCharacters(img):
          else:
              contour_regions.append(current_contour)
 
-    return len(contour_regions)
+    return contour_regions
 
 class FontDictionary(dict):
     def parse_json_dictionary(self, path):  # Todo: error check (path is folder)
