@@ -46,7 +46,7 @@ def createMask(maskSize, regionOfInterest):
 
     return mask
 
-def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF):
+def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=200000):
     """
     :param image: ndarray representing source image
     :param template:  ndarray representing template to search for
@@ -69,7 +69,7 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF):
         if match is None or maxVal > match[0]:
             match = (maxVal, maxLoc, scale)
 
-    if match is None or match[0] < 200000:  # Todo: This number might need tweaked
+    if match is None or match[0] < sensitivity:
         return None
 
     _, maxLoc, scale = match

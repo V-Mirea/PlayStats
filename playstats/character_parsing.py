@@ -25,8 +25,8 @@ def readText(roi, dictionary):
         region_image = algorithms.getImageRegion(roi, region)
 
         for key, value in dictionary.items():
-            template = cv2.imread(value.path, 0)
-            if algorithms.multiscaleMatchTemplate(region_image, template) is not None:
+            template = cv2.imread(value.path, 0)                  # Todo: This v number might need tweaked
+            if algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=200000) is not None:
                 found_chars.append((key, region.top_left.x))
                 break
     found_chars.sort(key=takePosition)
