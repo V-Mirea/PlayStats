@@ -6,15 +6,23 @@ from test_psvideo import *
 from test_character_parsing import *
 
 import character_parsing
+import algorithms
 
 class TestThrowAways(unittest.TestCase):
 
     def test_prevalentColors(self):
-        frame = cv2.imread("res/prevalentColors.jpg")
-        fshape = frame.shape[1::-1]
-        features = algorithms.PSFeatures(fshape, algorithms.Games.CSGO)
+        cap = cv2.VideoCapture("F:\\Users\\Vlad\\Programming\\PlayStats\\playstats\\res\\csgo_short.mp4")
+        while(True):
+            ret, frame = cap.read()
+            fshape = frame.shape[1::-1]
 
-        character_parsing.findCharacterRegions(algorithms.getImageRegion(frame, features.regions["health"]))
+            features = algorithms.PSFeatures(fshape, algorithms.Games.CSGO)
+            region = getImageRegion(frame, features.regions["health"])
+            dic = character_parsing.FontDictionary("F:\\Users\\Vlad\\Programming\\PlayStats\\tests\\res\\fonts\\hud")
+
+            character_parsing.readText(region, dic)
+            cv2.imshow("region", region)
+            cv2.waitKey(0)
 
 if __name__ == '__main__':
     # Run only the tests in the specified classes
