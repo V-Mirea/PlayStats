@@ -74,8 +74,7 @@ class CSGOVideo(PSVideo):
                 dictionary = character_parsing.FontDictionary()
                 dictionary.parse_json_dictionary("F:\\Users\\Vlad\\Programming\\PlayStats\\tests\\res\\fonts\\hud")
 
-                characters = character_parsing.findNumberOfCharacters(health_region)
-                character_parsing.readText(health_region, characters, dictionary)
+                character_parsing.readText(health_region, dictionary)
 
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.addNextFrame(processedFrame)

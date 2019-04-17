@@ -5,31 +5,36 @@ import numpy as np
 
 import algorithms
 
-def readText(roi, contours, dictionary):
+def takePosition(elem):
+    return elem[1]
+
+def readText(roi, dictionary):
     """
-    :param roi: ndarray opencv image
-    :param contours: list of regions, each containing a character (findNumberOfCharacters)
+    :param roi: ndarray opencv image in BGR format
     :param dictionary: FontDictionary with possible characters
     :return: string containing read text
     """
 
-    roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-    cv2.imshow("roi", roi)
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    character_regions = findCharacterRegions(roi)
+
+    found_chars = []
 
     print("start frame")
-    for region in contours:
-        img_region = None
-        img_region = algorithms.getImageRegion(roi, region)
+    for region in character_regions:
+        region_image = algorithms.getImageRegion(roi, region)
 
         for key, value in dictionary.items():
             template = cv2.imread(value.path, 0)
-            if algorithms.multiscaleMatchTemplate(img_region, template) is not None:
-                print("found " + key)
+            if algorithms.multiscaleMatchTemplate(region_image, template) is not None:
+                found_chars.append((key, region.top_left.x))
                 break
+    found_chars.sort(key=takePosition)
+    print(''.join([x[0] for x in found_chars]))
 
-def findNumberOfCharacters(img):
+def findCharacterRegions(img):
     """
-    :param img: ndarray opencv image
+    :param img: ndarray opencv image in BGR format
     :return: int - num of characters in the image
     """
 
