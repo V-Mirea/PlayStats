@@ -20,16 +20,16 @@ def readText(roi, dictionary):
 
     found_chars = []
 
-    print("start frame")
     for region in character_regions:
         region_image = algorithms.getImageRegion(roi, region)
 
         for key, value in dictionary.items():
-            template = cv2.imread(value.path, 0)                  # Todo: This v number might need tweaked
-            if algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=200000) is not None:
-                found_chars.append((key, region.top_left.x))
-                break
-    found_chars.sort(key=takePosition)
+            if value.image is not None:
+                template = cv2.cvtColor(value.image, cv2.COLOR_BGR2GRAY)  # Todo: This v number might need tweaked
+                if algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=220000) is not None:
+                    found_chars.append((key, region.top_left.x))
+                    break
+    found_chars.sort(key=takePosition)  # Todo: maybe inline the takePosition function?
     print(''.join([x[0] for x in found_chars]))
 
 def findCharacterRegions(img):
@@ -76,6 +76,10 @@ def findCharacterRegions(img):
     return contour_regions
 
 class FontDictionary(dict):
+    def __init__(self, path=None):
+        if path:
+            self.parse_json_dictionary(path)
+
     def parse_json_dictionary(self, path):  # Todo: error check (path is folder)
         """
         :param path: string - path to folder
@@ -96,6 +100,6 @@ class FontCharacter:
     def __init__(self, char, path_to_img, group):
         self.char = char
         self.path = path_to_img
-        self.img = cv2.imread(path_to_img)
+        self.image = cv2.imread(path_to_img)
         self.group = group
 
