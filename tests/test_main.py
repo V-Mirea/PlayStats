@@ -14,7 +14,7 @@ class TestThrowAways(unittest.TestCase):
         fshape = frame.shape[1::-1]
         features = algorithms.PSFeatures(fshape, algorithms.Games.CSGO)
 
-        character_parsing.findNumberOfCharacters(algorithms.getImageRegion(frame, features.regions["health"]))
+        character_parsing.findCharacterRegions(algorithms.getImageRegion(frame, features.regions["health"]))
 
 if __name__ == '__main__':
     # Run only the tests in the specified classes

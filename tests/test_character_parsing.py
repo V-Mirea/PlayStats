@@ -12,4 +12,4 @@ class TestCharacterParsing(unittest.TestCase):
         features = algorithms.PSFeatures(img.shape[1::-1], algorithms.Games.CSGO)
 
         health_region = algorithms.getImageRegion(img, features.regions["health"])
-        print(character_parsing.findNumberOfCharacters(health_region))
+        print(character_parsing.findCharacterRegions(health_region))
