@@ -55,6 +55,7 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF):
     """
 
     match = None
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     for scale in np.linspace(0.2, 2, 20):
         resized = cv2.resize(template, None, fx=scale, fy=scale)
@@ -62,12 +63,7 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF):
         if resized.shape[0] > image.shape[0] or resized.shape[1] > image.shape[1]:
             break
 
-        cv2.imshow("image", image)
-        cv2.imshow("template", resized)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-        matches = cv2.matchTemplate(image, resized, method)
+        matches = cv2.matchTemplate(gray, resized, method)
         _, maxVal, _, maxLoc = cv2.minMaxLoc(matches)
 
         if match is None or maxVal > match[0]:
