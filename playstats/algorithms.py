@@ -67,6 +67,11 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
         _, maxVal, _, maxLoc = cv2.minMaxLoc(matches)
 
         if match is None or maxVal > match[0]:
+            #print(maxVal)
+            #cv2.imshow("gray", gray)
+            #cv2.imshow("resized", resized)
+           # cv2.waitKey(0)
+            #cv2.destroyAllWindows()
             match = (maxVal, maxLoc, scale)
 
     if match is None or match[0] < sensitivity:
