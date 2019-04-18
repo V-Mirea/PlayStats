@@ -55,6 +55,10 @@ class CSGOVideo(PSVideo):
         self.game = algorithms.Games.CSGO
         self.text_color = None
 
+        self.raw_health = []
+        self.raw_armor = []
+        self.raw_money = []
+
     def processVideo(self):
         self.processing = True
         if self.originalVideo.isOpened():
@@ -72,9 +76,10 @@ class CSGOVideo(PSVideo):
 
                 health_region = algorithms.getImageRegion(frame, features.regions["health"])
                 dictionary = character_parsing.FontDictionary()
-                dictionary.parse_json_dictionary("F:\\Users\\Vlad\\Programming\\PlayStats\\tests\\res\\fonts\\hud")
+                dictionary.parse_json_dictionary("res\\fonts\\hud")
 
-                character_parsing.readText(health_region, dictionary)
+                health_str = character_parsing.readText(health_region, dictionary)
+                self.raw_health.append(health_str)
 
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.addNextFrame(processedFrame)
@@ -82,4 +87,5 @@ class CSGOVideo(PSVideo):
                 ret, frame = self.originalVideo.read()
 
         print("finished")
+        print(self.raw_health)
         self.processing = False
