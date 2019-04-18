@@ -26,11 +26,11 @@ def readText(roi, dictionary):
         for key, value in dictionary.items():
             if value.image is not None:
                 template = cv2.cvtColor(value.image, cv2.COLOR_BGR2GRAY)  # Todo: This v number might need tweaked
-                if algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=220000) is not None:
+                if algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=400000) is not None:
                     found_chars.append((key, region.top_left.x))
                     break
     found_chars.sort(key=takePosition)  # Todo: maybe inline the takePosition function?
-    print(''.join([x[0] for x in found_chars]))
+    return ''.join([x[0] for x in found_chars])
 
 def findCharacterRegions(img):
     """
