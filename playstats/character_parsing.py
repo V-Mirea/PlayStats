@@ -50,9 +50,9 @@ def findCharacterRegions(img):
     orig = img.copy()
 
     gray = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
-    ret, thresh = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
-    edges = cv2.Canny(thresh, 300, 300)
-    _, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #ret, thresh = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY) # Todo: tweak this to extract text from background
+    edges = cv2.Canny(gray, 300, 300)
+    _, contours, hierarchy = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     contour_regions = []  # List of for sure contours
     for i in range(0, len(contours)):  # Loop every detected contour
