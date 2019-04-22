@@ -2,6 +2,7 @@ import json
 import os
 import cv2
 import numpy as np
+from collections import namedtuple
 
 import algorithms
 
@@ -19,18 +20,26 @@ def readText(roi, dictionary):
     character_regions = findCharacterRegions(roi)
 
     found_chars = []
+    char_match = namedtuple('char_match', 'char value')
 
-    for region in character_regions:
+    for region in character_regions:  # Loop identified character regions
         region_image = algorithms.getImageRegion(roi, region)
+        match = char_match(None, 0)
 
-        for key, value in dictionary.items():
-            if value.image is not None:
-                template = cv2.cvtColor(value.image, cv2.COLOR_BGR2GRAY)  # Todo: This v number might need tweaked
-                if algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=400000) is not None:
-                    found_chars.append((key, region.top_left.x))
-                    break
+        for dictionary_char, font_char in dictionary.items():  # Loop each character in the dictionary
+            if font_char.image is not None:
+                template = cv2.cvtColor(font_char.image, cv2.COLOR_BGR2GRAY)  # Todo: This v number might need tweaked
+                reg, maxVal = algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=0)
+                if reg is not None and maxVal > match.value:
+                    match = char_match(dictionary_char, maxVal)
+        if match.char is not None:
+            found_chars.append((match.char, region.top_left.x))
+
     found_chars.sort(key=takePosition)  # Todo: maybe inline the takePosition function?
-    return ''.join([x[0] for x in found_chars])
+    if len(found_chars) > 0:
+        return ''.join([x[0] for x in found_chars])
+    else:
+        return ""
 
 def findCharacterRegions(img):
     """
@@ -55,7 +64,7 @@ def findCharacterRegions(img):
              if current_contour.overlaps(contour_regions[i]):
                  overlaps.append(i)
          if len(overlaps) > 1:
-             overlap_area = [contour_regions[i].area() for i in overlaps]
+             overlap_area = [contour_regions[i].area() for i in overlaps[1:]]
              overlap_area.insert(0, current_contour.area())
 
              max_index = overlap_area.index(max(overlap_area))

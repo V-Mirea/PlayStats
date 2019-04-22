@@ -46,7 +46,7 @@ def createMask(maskSize, regionOfInterest):
 
     return mask
 
-def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=200000):
+def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=200000):  #  Todo: Sensitivity needs looked at
     """
     :param image: ndarray representing source image
     :param template:  ndarray representing template to search for
@@ -56,12 +56,17 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
 
     match = None
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, gray = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
 
     for scale in np.linspace(0.2, 2, 20):
         resized = cv2.resize(template, None, fx=scale, fy=scale)
 
         if resized.shape[0] > image.shape[0] or resized.shape[1] > image.shape[1]:
             break
+
+        #cv2.imshow("gray", gray)
+        #cv2.imshow("resized", resized)
+        #cv2.waitKey(1)
 
         matches = cv2.matchTemplate(gray, resized, method)
         _, maxVal, _, maxLoc = cv2.minMaxLoc(matches)
@@ -75,14 +80,14 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
             match = (maxVal, maxLoc, scale)
 
     if match is None or match[0] < sensitivity:
-        return None
+        return None, 0
 
-    _, maxLoc, scale = match
+    val, maxLoc, scale = match
     tempH = int(template.shape[0] * scale)
     tempW = int(template.shape[1] * scale)
     locX, locY = maxLoc
 
-    return (locX, locY), (locX + tempW, locY + tempH)
+    return ((locX, locY), (locX + tempW, locY + tempH)), val
 
 def translateMaskRegion(region, maskRegion): # Todo: Needs tested
     """
