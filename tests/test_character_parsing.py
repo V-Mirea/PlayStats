@@ -7,9 +7,21 @@ import algorithms
 
 class TestCharacterParsing(unittest.TestCase):
 
-    def test_numOfChars(self):
-        img = cv2.imread("res/character_parsing.jpg")
-        features = algorithms.PSFeatures(img.shape[1::-1], algorithms.Games.CSGO)
+    def test_readText(self):
+        cap = cv2.VideoCapture("res/action_clip.mp4")
+        while (True):
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-        health_region = algorithms.getImageRegion(img, features.regions["health"])
-        print(character_parsing.findCharacterRegions(health_region))
+            fshape = frame.shape[1::-1]
+
+            features = algorithms.PSFeatures(fshape, algorithms.Games.CSGO)
+            health = algorithms.getImageRegion(frame, features.regions["health"])
+            armor = algorithms.getImageRegion(frame, features.regions["armor"])
+            dic = character_parsing.FontDictionary("res\\fonts\\hud")
+
+            print(character_parsing.readText(health, dic))
+            print(character_parsing.readText(armor, dic))
+            # cv2.imshow("region", region)
+            # cv2.waitKey(0)
