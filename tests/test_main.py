@@ -22,10 +22,12 @@ class TestThrowAways(unittest.TestCase):
             features = algorithms.PSFeatures(fshape, algorithms.Games.CSGO)
             health = algorithms.getImageRegion(frame, features.regions["health"])
             armor = algorithms.getImageRegion(frame, features.regions["armor"])
+            money = algorithms.getImageRegion(frame, features.regions["money"])
             dic = character_parsing.FontDictionary("res\\fonts\\hud")
 
             print("Health: %s" % character_parsing.readText(health, dic))
             print("Armor: %s" % character_parsing.readText(armor, dic))
+            print("Money: %s" % character_parsing.readText(money, dic))
             #cv2.imshow("region", frame)
             #cv2.waitKey(0)
 
