@@ -115,7 +115,7 @@ class PSFeatures:
                                       int(width*0.0625), height-1),
                 "armor": ImageRegion(int(width*0.1354), int(height*0.9546),
                                      int(width*0.1708), height-1),
-                "money": ImageRegion(int(width*0.0099), int(height*0.3259),
+                "money": ImageRegion(int(width*0.0235), int(height*0.3259),
                                      int(width*0.0896), int(height*0.3703))
             }
         else:
