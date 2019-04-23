@@ -56,7 +56,13 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
 
     match = None
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    ret, gray = cv2.threshold(gray, 248, 255, cv2.THRESH_BINARY_INV)
+    #ret, gray = cv2.threshold(gray, 248, 255, cv2.THRESH_BINARY_INV)
+    thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 15, 10)
+    #cv2.namedWindow('region3', cv2.WINDOW_NORMAL)
+    #cv2.imshow("region3", gray)
+    #cv2.namedWindow('region2', cv2.WINDOW_NORMAL)
+    #cv2.imshow("region2", thresh)
+    #cv2.waitKey(0)
 
     for scale in np.linspace(0.2, 2, 20):
         resized = cv2.resize(template, None, fx=scale, fy=scale)
@@ -64,7 +70,7 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
         if resized.shape[0] > image.shape[0] or resized.shape[1] > image.shape[1]:
             break
 
-        matches = cv2.matchTemplate(gray, resized, method)
+        matches = cv2.matchTemplate(thresh, resized, method)
         _, maxVal, _, maxLoc = cv2.minMaxLoc(matches)
 
         if match is None or maxVal > match[0]:
