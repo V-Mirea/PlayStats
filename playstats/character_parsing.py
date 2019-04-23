@@ -50,14 +50,21 @@ def findCharacterRegions(img):
     orig = img.copy()
 
     gray = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
-    #ret, thresh = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY) # Todo: tweak this to extract text from background
-    edges = cv2.Canny(gray, 300, 300)
-    _, contours, hierarchy = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    ret, thresh = cv2.threshold(gray, 245, 255, cv2.THRESH_BINARY)
+    #thresh = cv2.adaptiveThreshold(thresh1, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 29, -50)
+    #cv2.namedWindow('gray', cv2.WINDOW_NORMAL)
+    #cv2.imshow('gray', gray)
+    #cv2.namedWindow('threshold', cv2.WINDOW_NORMAL)
+    #cv2.imshow("threshold", thresh)
+    #edges = cv2.Canny(thresh, 300, 300)
+    _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     contour_regions = []  # List of for sure contours
     for i in range(0, len(contours)):  # Loop every detected contour
          x, y, w, h = cv2.boundingRect(contours[i])
-         current_contour = algorithms.ImageRegion(x, y, width=w, height=h)
+         if x > 0: x-= 1
+         if y > 0: y-= 1
+         current_contour = algorithms.ImageRegion(x, y, width=w+2, height=h+2)  # Todo: make sure this doesnt blow up if region too big
 
          overlaps = [-1]  # List of contour_regions indexes of regions that overlap with current region
          for i in range(len(contour_regions)):
@@ -82,6 +89,13 @@ def findCharacterRegions(img):
          else:
              contour_regions.append(current_contour)
 
+    areas = [x.height for x in contour_regions]
+    contour_regions = [x for x in contour_regions if not x.height < max(areas)-(.30 * max(areas))]
+    for contour in contour_regions:
+        cv2.rectangle(orig, contour.top_left, contour.bottom_right, 255, 1)
+    #cv2.namedWindow('region', cv2.WINDOW_NORMAL)
+    #cv2.imshow("region", orig)
+    #cv2.waitKey(1)
     return contour_regions
 
 class FontDictionary(dict):
