@@ -10,12 +10,16 @@ import algorithms
 
 class TestThrowAways(unittest.TestCase):
 
+    i = 0
     def test_prevalentColors(self):
-        cap = cv2.VideoCapture("res/action_clip.mp4")
+        i = 0
+        cap = cv2.VideoCapture("res/readText.mp4")
         while (True):
             ret, frame = cap.read()
             if not ret:
                 break
+
+            i += 1
 
             fshape = frame.shape[1::-1]
 
@@ -25,11 +29,11 @@ class TestThrowAways(unittest.TestCase):
             money = algorithms.getImageRegion(frame, features.regions["money"])
             dic = character_parsing.FontDictionary("res\\fonts\\hud")
 
-            print("Health: %s" % character_parsing.readText(health, dic))
-            print("Armor: %s" % character_parsing.readText(armor, dic))
-            print("Money: %s" % character_parsing.readText(money, dic))
-            #cv2.imshow("region", frame)
-            #cv2.waitKey(0)
+            print("Frame: %s  Health: %s  Armor: %s  Money: %s" %
+                  (i,
+                  character_parsing.readText(health, dic),
+                  character_parsing.readText(armor, dic),
+                  character_parsing.readText(money, dic)))
 
 if __name__ == '__main__':
     # Run only the tests in the specified classes
