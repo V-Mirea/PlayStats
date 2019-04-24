@@ -10,10 +10,9 @@ import algorithms
 
 class TestThrowAways(unittest.TestCase):
 
-    i = 0
-    def test_prevalentColors(self):
+    def test_readText(self):
         i = 0
-        cap = cv2.VideoCapture("res/readText.mp4")
+        cap = cv2.VideoCapture("res/HD_CSGO.mp4")
         while (True):
             ret, frame = cap.read()
             if not ret:

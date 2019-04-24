@@ -16,7 +16,6 @@ def readText(roi, dictionary):
     :return: string containing read text
     """
 
-    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     character_regions = findCharacterRegions(roi)
 
     found_chars = []
@@ -28,7 +27,7 @@ def readText(roi, dictionary):
 
         for dictionary_char, font_char in dictionary.items():  # Loop each character in the dictionary
             if font_char.image is not None:
-                template = cv2.cvtColor(font_char.image, cv2.COLOR_BGR2GRAY)  # Todo: This v number might need tweaked
+                template = cv2.cvtColor(font_char.image, cv2.COLOR_BGR2GRAY)  # Todo: Move this conversion into the matching function
                 reg, maxVal = algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=0)
                 if reg is not None and maxVal > match.value:
                     match = char_match(dictionary_char, maxVal)
@@ -44,58 +43,49 @@ def readText(roi, dictionary):
 def findCharacterRegions(img):
     """
     :param img: ndarray opencv image in BGR format
-    :return: int - num of characters in the image
+    :return: list of bounding regions around possible characters
     """
 
     orig = img.copy()
-
     gray = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
+
     ret, thresh = cv2.threshold(gray, 245, 255, cv2.THRESH_BINARY)
-    #thresh = cv2.adaptiveThreshold(thresh1, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 29, -50)
-    #cv2.namedWindow('gray', cv2.WINDOW_NORMAL)
-    #cv2.imshow('gray', gray)
-    #cv2.namedWindow('threshold', cv2.WINDOW_NORMAL)
-    #cv2.imshow("threshold", thresh)
-    #edges = cv2.Canny(thresh, 300, 300)
     _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     contour_regions = []  # List of for sure contours
     for i in range(0, len(contours)):  # Loop every detected contour
-         x, y, w, h = cv2.boundingRect(contours[i])
-         if x > 0: x-= 1
-         if y > 0: y-= 1
-         current_contour = algorithms.ImageRegion(x, y, width=w+2, height=h+2)  # Todo: make sure this doesnt blow up if region too big
+        x, y, w, h = cv2.boundingRect(contours[i])
+        if x > 0: x-= 1  # Increase the region a little because a looser bounding region matches better than a tighter
+        if y > 0: y-= 1
+        current_contour = algorithms.ImageRegion(x, y, width=w+2, height=h+2)  # Todo: make sure this doesnt blow up if region too big
 
-         overlaps = [-1]  # List of contour_regions indexes of regions that overlap with current region
-         for i in range(len(contour_regions)):
-             if current_contour.overlaps(contour_regions[i]):
-                 overlaps.append(i)
-         if len(overlaps) > 1:
-             overlap_area = [contour_regions[i].area() for i in overlaps[1:]]
-             overlap_area.insert(0, current_contour.area())
+        overlaps = [-1]  # List of contour_regions indexes of regions that overlap with current region
+        for j in range(len(contour_regions)):
+            if current_contour.overlaps(contour_regions[j]):
+                overlaps.append(j)
+        if len(overlaps) > 1:
+            overlap_area = [contour_regions[i].area() for i in overlaps[1:]]
+            overlap_area.insert(0, current_contour.area())
 
-             max_index = overlap_area.index(max(overlap_area))
-             overlaps.pop(max_index)
+            max_index = overlap_area.index(max(overlap_area))
+            overlaps.pop(max_index)
 
-             addThis = True
-             for index in overlaps[::-1]:
-                 if index != -1:
-                     contour_regions.pop(index)
-                 else:
-                     addThis = False
+            add_this = True
+            for index in overlaps[::-1]:
+                if index != -1:
+                    contour_regions.pop(index)
+                else:
+                    add_this = False
 
-             if addThis:
-                 contour_regions.append(current_contour)
-         else:
-             contour_regions.append(current_contour)
+            if add_this:
+                contour_regions.append(current_contour)
+        else:
+            contour_regions.append(current_contour)
 
+    # Get rid of regions that are extra small, they're probably not characters
     areas = [x.height for x in contour_regions]
     contour_regions = [x for x in contour_regions if not x.height < max(areas)-(.30 * max(areas))]
-    for contour in contour_regions:
-        cv2.rectangle(orig, contour.top_left, contour.bottom_right, 255, 1)
-    #cv2.namedWindow('region', cv2.WINDOW_NORMAL)
-    #cv2.imshow("region", orig)
-    #cv2.waitKey(1)
+
     return contour_regions
 
 class FontDictionary(dict):

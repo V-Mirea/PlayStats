@@ -51,18 +51,12 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
     :param image: ndarray representing source image
     :param template:  ndarray representing template to search for
     :param method: OpenCV matchTemplate comparison method
-    :return: return region representing location of template in image
+    :return: region representing location of template in image, number representing strength of match
     """
 
     match = None
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    #ret, gray = cv2.threshold(gray, 248, 255, cv2.THRESH_BINARY_INV)
     thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 15, 10)
-    #cv2.namedWindow('region3', cv2.WINDOW_NORMAL)
-    #cv2.imshow("region3", gray)
-    #cv2.namedWindow('region2', cv2.WINDOW_NORMAL)
-    #cv2.imshow("region2", thresh)
-    #cv2.waitKey(0)
 
     for scale in np.linspace(0.2, 2, 20):
         resized = cv2.resize(template, None, fx=scale, fy=scale)
@@ -74,11 +68,6 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
         _, maxVal, _, maxLoc = cv2.minMaxLoc(matches)
 
         if match is None or maxVal > match[0]:
-            #print(maxVal)
-            #cv2.imshow("gray", gray)
-            #cv2.imshow("resized", resized)
-           # cv2.waitKey(0)
-            #cv2.destroyAllWindows()
             match = (maxVal, maxLoc, scale)
 
     if match is None or match[0] < sensitivity:
@@ -89,6 +78,7 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
     tempW = int(template.shape[1] * scale)
     locX, locY = maxLoc
 
+    # Todo: Is this even an actual region being returned?
     return ((locX, locY), (locX + tempW, locY + tempH)), val
 
 def translateMaskRegion(region, maskRegion): # Todo: Needs tested
