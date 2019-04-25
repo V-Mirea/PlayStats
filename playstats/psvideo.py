@@ -1,5 +1,6 @@
 import algorithms
 import character_parsing
+from resultscreen import AnalysisResults, CSGOResults
 
 import cv2
 from abc import abstractmethod
@@ -11,7 +12,7 @@ def makePSVideo(video, game):
         return CSGOVideo(video)
 
 class PSVideo(QObject):
-    video_processed = pyqtSignal()
+    video_processed = pyqtSignal(AnalysisResults)
 
     def __init__(self, originalVideo):
         """
@@ -99,8 +100,9 @@ class CSGOVideo(PSVideo):
 
                 ret, frame = self.originalVideo.read()
 
-        print(self.raw_health)
-        print(self.raw_armor)
-        print(self.raw_money)
+        results = CSGOResults()
+        results.health = [int(x) for x in self.raw_health]
+        results.armor = [int(x) for x in self.raw_armor]
+        results.money = [int(x) for x in self.raw_money]
         self.processing = False
-        self.video_processed.emit()
+        self.video_processed.emit(results)

@@ -37,15 +37,16 @@ class AnalysisWindow(qt.QMainWindow):
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
 
-    @QtCore.pyqtSlot()
-    def processingFinished(self):
+    @QtCore.pyqtSlot(AnalysisResults)
+    def processingFinished(self, results):
         self.ui.statusbar.showMessage("Analysis complete")
         self.ui.buttonStats.setEnabled(True)
+        self.analysis_results = results
 
     ## Button events ##
     @QtCore.pyqtSlot()
     def seeResults(self):
-        self.result = ResultsScreen()
+        self.result = ResultsScreen(self.analysis_results)
         self.result.show()
 
     @QtCore.pyqtSlot()
