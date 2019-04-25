@@ -9,6 +9,7 @@ from analysis_ui import AnalysisWindow_ui
 import algorithms
 from videoplayer_ui import VideoPlayer_ui
 from psvideo import *
+from resultscreen import *
 
 FILTERS = {"Videos": [".avi", ".mp4"], "Images": [".png", ".jpg"]}
 FILTERLIST = ""
@@ -28,6 +29,7 @@ class AnalysisWindow(qt.QMainWindow):
 
         self.ui.buttonBrowse.clicked.connect(self.browseDirectory)
         self.ui.buttonStart.clicked.connect(self.startAnalysis)
+        self.ui.buttonStats.clicked.connect(self.seeResults)
 
         # Create and add video player
         self._screen = VideoPlayer(self)
@@ -35,7 +37,16 @@ class AnalysisWindow(qt.QMainWindow):
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
 
+    @QtCore.pyqtSlot()
+    def processingFinished(self):
+        self.ui.statusbar.showMessage("Analysis complete")
+        self.ui.buttonStats.setEnabled(True)
+
     ## Button events ##
+    @QtCore.pyqtSlot()
+    def seeResults(self):
+        self.result = ResultsScreen()
+        self.result.show()
 
     @QtCore.pyqtSlot()
     def browseDirectory(self):
@@ -73,9 +84,10 @@ class AnalysisWindow(qt.QMainWindow):
         if filterType == "Videos":
             cap = cv2.VideoCapture(fileName)
             self.ui.statusbar.showMessage("Analyzing video")
+            self.ui.buttonStats.setEnabled(False)
             self._screen.startAnalysis(cap, game)
+            self._screen.video.video_processed.connect(self.processingFinished) # Todo: make sure this wont cause problems
             self._screen.pause()
-            self.ui.statusbar.clearMessage()
         elif filterType == "Images":
             pic = cv2.imread(fileName)
             self._screen.newFrame.emit(pic)

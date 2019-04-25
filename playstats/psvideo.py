@@ -3,18 +3,22 @@ import character_parsing
 
 import cv2
 from abc import abstractmethod
+from PyQt5.QtCore import QObject, pyqtSignal
 
 
 def makePSVideo(video, game):
     if game is algorithms.Games.CSGO:
         return CSGOVideo(video)
 
-class PSVideo:
+class PSVideo(QObject):
+    video_processed = pyqtSignal()
+
     def __init__(self, originalVideo):
         """
         :param originalVideo:  VideoCapture of video to process
         """
 
+        super().__init__()
         self.originalVideo = originalVideo
         self.processing = False
 
@@ -99,3 +103,4 @@ class CSGOVideo(PSVideo):
         print(self.raw_armor)
         print(self.raw_money)
         self.processing = False
+        self.video_processed.emit()
