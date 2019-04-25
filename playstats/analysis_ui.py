@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'playstats/analysis.ui'
+# Form implementation generated from reading ui file 'analysis.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -49,6 +49,10 @@ class AnalysisWindow_ui(object):
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setObjectName("widget")
         self.verticalLayout.addWidget(self.widget)
+        self.buttonStats = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonStats.setEnabled(False)
+        self.buttonStats.setObjectName("buttonStats")
+        self.verticalLayout.addWidget(self.buttonStats)
         self.verticalLayout.setStretch(2, 3)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -71,4 +75,15 @@ class AnalysisWindow_ui(object):
         self.comboGame.setItemText(0, _translate("MainWindow", "Counter Strike: Global Offensive"))
         self.comboGame.setItemText(1, _translate("MainWindow", "Overwatch"))
         self.comboGame.setItemText(2, _translate("MainWindow", "Fortnite"))
+        self.buttonStats.setText(_translate("MainWindow", "See Results"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
 
