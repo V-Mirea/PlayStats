@@ -60,6 +60,11 @@ class CSGOVideo(PSVideo):
         self.raw_money = []
 
     def processVideo(self):
+        '''
+        Run through the VideoCapture, perform all calculations/analysis,
+        save processed frames
+        :return:
+        '''
         self.processing = True
         if self.originalVideo.isOpened():
             ret, frame = self.originalVideo.read()
@@ -75,17 +80,22 @@ class CSGOVideo(PSVideo):
                     cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
 
                 health_region = algorithms.getImageRegion(frame, features.regions["health"])
+                armor_region = algorithms.getImageRegion(frame, features.regions["armor"])
+                money_region = algorithms.getImageRegion(frame, features.regions["money"])
+
                 dictionary = character_parsing.FontDictionary()
                 dictionary.parse_json_dictionary("res\\fonts\\hud")
 
-                health_str = character_parsing.readText(health_region, dictionary)
-                self.raw_health.append(health_str)
+                self.raw_health.append(character_parsing.readText(health_region, dictionary))
+                self.raw_armor.append(character_parsing.readText(armor_region, dictionary))
+                self.raw_money.append(character_parsing.readText(money_region, dictionary))
 
                 processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.addNextFrame(processedFrame)
 
                 ret, frame = self.originalVideo.read()
 
-        print("finished")
         print(self.raw_health)
+        print(self.raw_armor)
+        print(self.raw_money)
         self.processing = False
