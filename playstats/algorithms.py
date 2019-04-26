@@ -78,8 +78,8 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
     tempW = int(template.shape[1] * scale)
     locX, locY = maxLoc
 
-    # Todo: Is this even an actual region being returned?
-    return ((locX, locY), (locX + tempW, locY + tempH)), val
+    matchRegion = ImageRegion(locX, locY, width=tempW, height=tempH)
+    return matchRegion, val
 
 def translateMaskRegion(region, maskRegion): # Todo: Needs tested
     """
