@@ -23,7 +23,7 @@ def readText(roi, dictionary):
 
     for region in character_regions:  # Loop identified character regions
         region_image = algorithms.getImageRegion(roi, region)
-        match = char_match(None, 0)
+        match = char_match(None, 0, None)
 
         for dictionary_char, font_char in dictionary.items():  # Loop each character in the dictionary
             if font_char.image is not None:
@@ -33,7 +33,9 @@ def readText(roi, dictionary):
                     match = char_match(dictionary_char, maxVal, matchReg)
 
         if match.char is not None:
-            found_chars.append({"char": match.char, "region": match.region})
+            # Translate matched region from being in terms of character region to the whole image region
+            translated_region = algorithms.translateMaskRegion(match.region, region)
+            found_chars.append({"char": match.char, "region": translated_region})
 
     found_chars.sort(key=takePosition)  # Todo: maybe inline the takePosition function?
     if len(found_chars) > 0:
