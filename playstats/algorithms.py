@@ -81,7 +81,7 @@ def multiscaleMatchTemplate(image, template, method=cv2.TM_CCOEFF, sensitivity=2
     matchRegion = ImageRegion(locX, locY, width=tempW, height=tempH)
     return matchRegion, val
 
-def translateMaskRegion(region, maskRegion): # Todo: Needs tested
+def translateMaskRegion(region, maskRegion): # Todo: Needs tested; make 'maskRegion' the actual image
     """
     :param region: region in terms of maskRegion
     :param maskRegion: region of original picture
@@ -163,3 +163,19 @@ def findPrevalentColors(images, n=1):
 
     colors = sorted(colors, key=itemgetter('occurrences'), reverse=True)  # Sort from most to least common
     return colors[:n]  # Return n most common
+
+def drawIndentifiedCharacters(image, identified_chars):
+    '''
+
+    :param image: BGR image
+    :param indetified_chars: list of dictionaries {"char": character identified, "region": bounding region}
+    :return: altered BGR image
+    '''
+
+    orig = image.copy()
+
+    for identified_char in identified_chars:
+        region = identified_char["region"]
+        cv2.rectangle(orig, region.top_left, region.bottom_right, 255, 2)
+
+    return orig

@@ -81,28 +81,34 @@ class CSGOVideo(PSVideo):
             while ret is True:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-                for key, region in features.regions.items():
-                    cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
-
-                health_region = algorithms.getImageRegion(frame, features.regions["health"])
-                armor_region = algorithms.getImageRegion(frame, features.regions["armor"])
-                money_region = algorithms.getImageRegion(frame, features.regions["money"])
+                #for key, region in features.regions.items():
+                #    cv2.rectangle(frame, region.top_left, region.bottom_right, 255, 2)
 
                 dictionary = character_parsing.FontDictionary()
                 dictionary.parse_json_dictionary("res\\fonts\\hud")
 
-                self.raw_health.append(character_parsing.readText(health_region, dictionary))
-                self.raw_armor.append(character_parsing.readText(armor_region, dictionary))
-                self.raw_money.append(character_parsing.readText(money_region, dictionary))
+                self.raw_readings = []
+                identified_chars = []
+                for name, region in features.regions.items():  # All regions are text rn so handle all the same for now
+                    image_region = algorithms.getImageRegion(frame, region)
+                    image_str, image_chars = character_parsing.readText(image_region, dictionary)
 
-                processedFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    # Translate each character region from being in terms of feature region to the whole frame
+                    for char in image_chars:
+                        char["region"] = algorithms.translateMaskRegion(char["region"], region)
+
+                    self.raw_readings.append({"name": name, "string": image_str})
+                    identified_chars.extend(image_chars)
+
+                drawnFrame = algorithms.drawIndentifiedCharacters(frame, identified_chars)
+                processedFrame = cv2.cvtColor(drawnFrame, cv2.COLOR_BGR2RGB)
                 self.addNextFrame(processedFrame)
 
                 ret, frame = self.originalVideo.read()
 
-        results = CSGOResults()
-        results.health = [int(x) for x in self.raw_health]
-        results.armor = [int(x) for x in self.raw_armor]
-        results.money = [int(x) for x in self.raw_money]
-        self.processing = False
-        self.video_processed.emit(results)
+        #results = CSGOResults()
+        #results.health = [int(x) for x in self.raw_health]
+        #results.armor = [int(x) for x in self.raw_armor]
+        #results.money = [int(x) for x in self.raw_money]
+        #self.processing = False
+        #self.video_processed.emit(results)
