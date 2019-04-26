@@ -7,7 +7,7 @@ from collections import namedtuple
 import algorithms
 
 def takePosition(elem):
-    return elem[1]
+    return elem["region"].top_left.x
 
 def readText(roi, dictionary):
     """
@@ -19,7 +19,7 @@ def readText(roi, dictionary):
     character_regions = findCharacterRegions(roi)
 
     found_chars = []
-    char_match = namedtuple('char_match', 'char value')
+    char_match = namedtuple('char_match', 'char value region')
 
     for region in character_regions:  # Loop identified character regions
         region_image = algorithms.getImageRegion(roi, region)
@@ -28,17 +28,18 @@ def readText(roi, dictionary):
         for dictionary_char, font_char in dictionary.items():  # Loop each character in the dictionary
             if font_char.image is not None:
                 template = cv2.cvtColor(font_char.image, cv2.COLOR_BGR2GRAY)  # Todo: Move this conversion into the matching function
-                reg, maxVal = algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=0)
-                if reg is not None and maxVal > match.value:
-                    match = char_match(dictionary_char, maxVal)
+                matchReg, maxVal = algorithms.multiscaleMatchTemplate(region_image, template, sensitivity=0)
+                if matchReg is not None and maxVal > match.value:
+                    match = char_match(dictionary_char, maxVal, matchReg)
+
         if match.char is not None:
-            found_chars.append((match.char, region.top_left.x))
+            found_chars.append({"char": match.char, "region": match.region})
 
     found_chars.sort(key=takePosition)  # Todo: maybe inline the takePosition function?
     if len(found_chars) > 0:
-        return ''.join([x[0] for x in found_chars])
+        return ''.join([x["char"] for x in found_chars]), found_chars
     else:
-        return ""
+        return "", None
 
 def findCharacterRegions(img):
     """
