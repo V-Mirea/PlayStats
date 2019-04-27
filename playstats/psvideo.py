@@ -92,12 +92,13 @@ class CSGOVideo(PSVideo):
                     image_region = algorithms.getImageRegion(frame, region)
                     image_str, image_chars = character_parsing.readText(image_region, dictionary)
 
-                    # Translate each character region from being in terms of feature region to the whole frame
-                    for char in image_chars:
-                        char["region"] = algorithms.translateMaskRegion(char["region"], region)
+                    if image_chars:
+                        # Translate each character region from being in terms of feature region to the whole frame
+                        for char in image_chars:
+                            char["region"] = algorithms.translateMaskRegion(char["region"], region)
 
-                    self.raw_readings[name].append(image_str)
-                    identified_chars.extend(image_chars)
+                        self.raw_readings[name].append(image_str)
+                        identified_chars.extend(image_chars)
 
                 drawnFrame = algorithms.drawIndentifiedCharacters(frame, identified_chars)
                 processedFrame = cv2.cvtColor(drawnFrame, cv2.COLOR_BGR2RGB)
