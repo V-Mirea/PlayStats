@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'playstats/videoplayer.ui'
+# Form implementation generated from reading ui file 'videoplayer.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -12,22 +12,29 @@ class VideoPlayer_ui(object):
     def setupUi(self, VideoPlayer):
         VideoPlayer.setObjectName("VideoPlayer")
         VideoPlayer.resize(581, 441)
-        self.gridLayout = QtWidgets.QGridLayout(VideoPlayer)
-        self.gridLayout.setObjectName("gridLayout")
-        self.buttonForward = QtWidgets.QPushButton(VideoPlayer)
-        self.buttonForward.setObjectName("buttonForward")
-        self.gridLayout.addWidget(self.buttonForward, 1, 2, 1, 1)
-        self.buttonPause = QtWidgets.QPushButton(VideoPlayer)
-        self.buttonPause.setObjectName("buttonPause")
-        self.gridLayout.addWidget(self.buttonPause, 1, 1, 1, 1)
+        self.verticalLayout = QtWidgets.QVBoxLayout(VideoPlayer)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setSpacing(6)
+        self.horizontalLayout.setObjectName("horizontalLayout")
         self.buttonBack = QtWidgets.QPushButton(VideoPlayer)
         self.buttonBack.setObjectName("buttonBack")
-        self.gridLayout.addWidget(self.buttonBack, 1, 0, 1, 1)
-        self.videoFrame = QtWidgets.QFrame(VideoPlayer)
-        self.videoFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.videoFrame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.videoFrame.setObjectName("videoFrame")
-        self.gridLayout.addWidget(self.videoFrame, 0, 0, 1, 3)
+        self.horizontalLayout.addWidget(self.buttonBack)
+        self.buttonPause = QtWidgets.QPushButton(VideoPlayer)
+        self.buttonPause.setObjectName("buttonPause")
+        self.horizontalLayout.addWidget(self.buttonPause)
+        self.checkShowAnalysis = QtWidgets.QCheckBox(VideoPlayer)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.checkShowAnalysis.sizePolicy().hasHeightForWidth())
+        self.checkShowAnalysis.setSizePolicy(sizePolicy)
+        self.checkShowAnalysis.setChecked(True)
+        self.checkShowAnalysis.setObjectName("checkShowAnalysis")
+        self.horizontalLayout.addWidget(self.checkShowAnalysis)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(VideoPlayer)
         QtCore.QMetaObject.connectSlotsByName(VideoPlayer)
@@ -35,7 +42,17 @@ class VideoPlayer_ui(object):
     def retranslateUi(self, VideoPlayer):
         _translate = QtCore.QCoreApplication.translate
         VideoPlayer.setWindowTitle(_translate("VideoPlayer", "Video"))
-        self.buttonForward.setText(_translate("VideoPlayer", ">>"))
-        self.buttonPause.setText(_translate("VideoPlayer", "l> / ||"))
         self.buttonBack.setText(_translate("VideoPlayer", "<<"))
+        self.buttonPause.setText(_translate("VideoPlayer", "l> / ||"))
+        self.checkShowAnalysis.setText(_translate("VideoPlayer", "Show Analysis"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    VideoPlayer = QtWidgets.QWidget()
+    ui = Ui_VideoPlayer()
+    ui.setupUi(VideoPlayer)
+    VideoPlayer.show()
+    sys.exit(app.exec_())
 

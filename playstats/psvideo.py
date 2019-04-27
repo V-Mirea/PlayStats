@@ -23,7 +23,8 @@ class PSVideo(QObject):
         self.originalVideo = originalVideo
         self.processing = False
 
-        self.processedFrames = []  # Stores frames in RGB format
+        self.originalFrames = []  # Stores frames in RGB format
+        self.processedFrames = []   # Stores procressed frames
         self.videoIndex = 0
 
     @abstractmethod
@@ -39,7 +40,7 @@ class PSVideo(QObject):
         """
         pass
 
-    def addNextFrame(self, frame):
+    def addNextFrame(self, frame):  # Todo: get rid of this
         """
         :param frame: numpy ndarray in RBG format
         :return: void
@@ -47,10 +48,10 @@ class PSVideo(QObject):
 
         self.processedFrames.append(frame)
 
-    def getNextFrame(self):
+    def getNextFrame(self, processed=True):
         if self.videoIndex < len(self.processedFrames):
             self.videoIndex += 1
-            return self.processedFrames[self.videoIndex - 1]
+            return self.processedFrames[self.videoIndex - 1] if processed else self.originalFrames[self.videoIndex - 1]
 
         return None
 
@@ -59,10 +60,6 @@ class CSGOVideo(PSVideo):
         super().__init__(originalVideo)
         self.game = algorithms.Games.CSGO
         self.text_color = None
-
-        self.raw_health = []
-        self.raw_armor = []
-        self.raw_money = []
 
     def processVideo(self):
         '''
@@ -104,7 +101,10 @@ class CSGOVideo(PSVideo):
 
                 drawnFrame = algorithms.drawIndentifiedCharacters(frame, identified_chars)
                 processedFrame = cv2.cvtColor(drawnFrame, cv2.COLOR_BGR2RGB)
-                self.addNextFrame(processedFrame)
+                origFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                self.originalFrames.append(origFrame)
+                self.processedFrames.append(processedFrame)
 
                 ret, frame = self.originalVideo.read()
 
@@ -113,9 +113,5 @@ class CSGOVideo(PSVideo):
             int_readings = [int(x) for x in readings]  # Todo: error checking
             self.results[name] = int_readings
 
-        #results = CSGOResults()
-        #results.health = [int(x) for x in self.raw_health]
-        #results.armor = [int(x) for x in self.raw_armor]
-        #results.money = [int(x) for x in self.raw_money]
         self.processing = False
         self.video_processed.emit(self.results)

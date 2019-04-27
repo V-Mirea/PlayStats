@@ -108,6 +108,9 @@ class VideoPlayer(qt.QWidget):
         self.ui = VideoPlayer_ui()
         self.ui.setupUi(self)
 
+        self.video_screen = VideoScreen()
+        self.ui.verticalLayout.insertWidget(0, self.video_screen)
+
         self._frame = None
         self.video = None
 
@@ -129,8 +132,8 @@ class VideoPlayer(qt.QWidget):
 
         self.video = makePSVideo(videoCapture, game)
 
-        self._frame = cv2.cvtColor(videoCapture.read()[1], cv2.COLOR_BGR2RGB)
-        self.update()
+        self.video_screen.frame = cv2.cvtColor(videoCapture.read()[1], cv2.COLOR_BGR2RGB)
+        self.video_screen.update()
 
         t = threading.Thread(target=self.video.processVideo)
         t.start()
@@ -141,15 +144,15 @@ class VideoPlayer(qt.QWidget):
         Pause timer if no new frames
         :return: void
         """
-        frame = self.video.getNextFrame()
+        frame = self.video.getNextFrame(self.ui.checkShowAnalysis.isChecked())
         if frame is None:
             if self.video.processing:
                 pass  # Todo: do something here?
             else:
                 self.pause()
         else:
-            self._frame = frame
-            self.update()
+            self.video_screen.frame = frame
+            self.video_screen.update()
 
     def rewind(self):
         """
@@ -181,6 +184,12 @@ class VideoPlayer(qt.QWidget):
         else:
             self.play()
 
+class VideoScreen(qt.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.frame = None
+
     def paintEvent(self, e):
         """
         Override of QWidget function.
@@ -189,7 +198,8 @@ class VideoPlayer(qt.QWidget):
         :return: void
         """
 
-        if self._frame is None:
+        if self.frame is None:
             return
+
         painter = QtGui.QPainter(self)
-        painter.drawImage(QtCore.QPoint(0, 0), qimage2ndarray.array2qimage(cv2.resize(self._frame, (self.geometry().width(), self.geometry().height()))))
+        painter.drawImage(QtCore.QPoint(0, 0), qimage2ndarray.array2qimage(cv2.resize(self.frame, (self.geometry().width(), self.geometry().height()))))
