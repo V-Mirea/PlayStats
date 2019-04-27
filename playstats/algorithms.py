@@ -176,6 +176,8 @@ def drawIndentifiedCharacters(image, identified_chars):
 
     for identified_char in identified_chars:
         region = identified_char["region"]
-        cv2.rectangle(orig, region.top_left, region.bottom_right, 255, 2)
+        cv2.rectangle(orig, region.top_left, region.bottom_right, 255, cv2.FILLED)
+        text_loc = (region.top_left.x, region.bottom_right.y)
+        cv2.putText(orig, identified_char["char"], text_loc, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), thickness=3)
 
     return orig
