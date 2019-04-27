@@ -108,7 +108,11 @@ class PSFeatures:
                 "armor": ImageRegion(int(width*0.1354), int(height*0.9546),
                                      int(width*0.1708), height-1),
                 "money": ImageRegion(int(width*0.0235), int(height*0.3259),
-                                     int(width*0.0896), int(height*0.3703))
+                                     int(width*0.0896), int(height*0.3703)),
+                "clip_ammo": ImageRegion(int(width*0.8995), int(height*0.9546),
+                                     int(width*0.9250), height-1),
+                "spare_ammo": ImageRegion(int(width*0.9349), int(height*0.9676),
+                                     int(width*0.9479), int(height*0.9907))
             }
         else:
             self.regions = {}
@@ -176,7 +180,7 @@ def drawIndentifiedCharacters(image, identified_chars):
 
     for identified_char in identified_chars:
         region = identified_char["region"]
-        cv2.rectangle(orig, region.top_left, region.bottom_right, 255, cv2.FILLED)
+        cv2.rectangle(orig, region.top_left, region.bottom_right, (255, 255, 255), cv2.FILLED)
         text_loc = (region.top_left.x, region.bottom_right.y)
         cv2.putText(orig, identified_char["char"], text_loc, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), thickness=3)
 
