@@ -34,17 +34,12 @@ class ResultsScreen(QtWidgets.QWidget):
         self.plot_canvas = FigureCanvas(self.figure)
         self.plot_toolbar = NavigationToolbar(self.plot_canvas, self)
 
-        graph_health = self.figure.add_subplot(311)
-        graph_health.set_ylabel('Health')
-        graph_health.plot(range(1, len(self.results.health)+1), self.results.health)
-
-        graph_armor = self.figure.add_subplot(312)
-        graph_armor.set_ylabel('Armor')
-        graph_armor.plot(range(1, len(self.results.armor) + 1), self.results.armor)
-
-        graph_money = self.figure.add_subplot(313)
-        graph_money.set_ylabel('Money')
-        graph_money.plot(range(1, len(self.results.money) + 1), self.results.money)
+        num_results = len(self.results)
+        for i in range(num_results):
+            result = list(self.results.items())[i]
+            subplot = self.figure.add_subplot(num_results, 1, i+1)
+            subplot.set_ylabel(result[0])
+            subplot.plot(range(1, len(result[1]) + 1), result[1])
 
         self.plot_canvas.draw()
 

@@ -12,7 +12,7 @@ def makePSVideo(video, game):
         return CSGOVideo(video)
 
 class PSVideo(QObject):
-    video_processed = pyqtSignal(AnalysisResults)
+    video_processed = pyqtSignal(dict)
 
     def __init__(self, originalVideo):
         """
@@ -77,6 +77,9 @@ class CSGOVideo(PSVideo):
 
             features = algorithms.PSFeatures(fshape, self.game)
 
+            self.raw_readings = {}
+            for name, region in features.regions.items():
+                self.raw_readings[name] = []
             # Main processing
             while ret is True:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -87,7 +90,6 @@ class CSGOVideo(PSVideo):
                 dictionary = character_parsing.FontDictionary()
                 dictionary.parse_json_dictionary("res\\fonts\\hud")
 
-                self.raw_readings = []
                 identified_chars = []
                 for name, region in features.regions.items():  # All regions are text rn so handle all the same for now
                     image_region = algorithms.getImageRegion(frame, region)
@@ -97,7 +99,7 @@ class CSGOVideo(PSVideo):
                     for char in image_chars:
                         char["region"] = algorithms.translateMaskRegion(char["region"], region)
 
-                    self.raw_readings.append({"name": name, "string": image_str})
+                    self.raw_readings[name].append(image_str)
                     identified_chars.extend(image_chars)
 
                 drawnFrame = algorithms.drawIndentifiedCharacters(frame, identified_chars)
@@ -106,9 +108,14 @@ class CSGOVideo(PSVideo):
 
                 ret, frame = self.originalVideo.read()
 
+        self.results = {}
+        for name, readings in self.raw_readings.items():
+            int_readings = [int(x) for x in readings]  # Todo: error checking
+            self.results[name] = int_readings
+
         #results = CSGOResults()
         #results.health = [int(x) for x in self.raw_health]
         #results.armor = [int(x) for x in self.raw_armor]
         #results.money = [int(x) for x in self.raw_money]
-        #self.processing = False
-        #self.video_processed.emit(results)
+        self.processing = False
+        self.video_processed.emit(self.results)

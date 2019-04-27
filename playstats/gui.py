@@ -37,7 +37,7 @@ class AnalysisWindow(qt.QMainWindow):
         layout.addWidget(self._screen)
         self.ui.widget.setLayout(layout)
 
-    @QtCore.pyqtSlot(AnalysisResults)
+    @QtCore.pyqtSlot(dict)
     def processingFinished(self, results):
         self.ui.statusbar.showMessage("Analysis complete")
         self.ui.buttonStats.setEnabled(True)
