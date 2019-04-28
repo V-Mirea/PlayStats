@@ -19,7 +19,12 @@ class ResultsScreen(QtWidgets.QWidget):
     def __init__(self, results):  # Todo: For now takes only CSGOResults. Make whole class more generic
         super().__init__()
         self.results = results
-        self.title = ""
+
+        self.title = "PlayStats - Results"
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("res/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon)
+
         self.left = 10
         self.top = 10
         self.width = 640
