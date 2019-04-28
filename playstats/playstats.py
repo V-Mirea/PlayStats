@@ -5,7 +5,7 @@ import cv2
 def main():
     app = qt.QApplication([])
     window = gui.AnalysisWindow()
-    window.show()
+    window.showMaximized()
     app.exec_()
 
 if __name__ == "__main__":
