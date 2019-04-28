@@ -25,10 +25,13 @@ class ResultsScreen(QtWidgets.QWidget):
         icon.addPixmap(QtGui.QPixmap("res/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon)
 
-        self.left = 10
-        self.top = 10
         self.width = 640
         self.height = 480
+
+        screen = QtWidgets.QDesktopWidget().availableGeometry()
+        self.left = (screen.width() / 2) - (self.width / 2)
+        self.top = (screen.height() / 2) - (self.height / 2)
+
         self.initUI()
 
     def initUI(self):
