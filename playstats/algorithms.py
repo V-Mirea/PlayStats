@@ -110,9 +110,9 @@ class PSFeatures:
                 "money": ImageRegion(int(width*0.0235), int(height*0.3259),
                                      int(width*0.0896), int(height*0.3703)),
                 "clip_ammo": ImageRegion(int(width*0.8995), int(height*0.9546),
-                                     int(width*0.9250), height-1),
-                "spare_ammo": ImageRegion(int(width*0.9349), int(height*0.9676),
-                                     int(width*0.9479), int(height*0.9907))
+                                     int(width*0.9250), height-1)
+                #"spare_ammo": ImageRegion(int(width*0.9349), int(height*0.9676),
+                                     #int(width*0.9479), int(height*0.9907))
             }
         else:
             self.regions = {}
