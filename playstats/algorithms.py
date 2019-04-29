@@ -185,3 +185,14 @@ def drawIndentifiedCharacters(image, identified_chars):
         cv2.putText(orig, identified_char["char"], text_loc, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), thickness=3)
 
     return orig
+
+def smoothReadings(readings):
+    # Todo: make sure readings is list of ints
+
+    len_readings = len(readings)
+    for i in range(len_readings):
+        if i > 0 and i < len_readings - 1:
+            if readings[i-1] == readings[i+1] and readings[i] != readings[i-1]:
+                readings[i] = readings[i-1]
+
+    return readings

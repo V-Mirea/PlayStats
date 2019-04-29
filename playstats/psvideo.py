@@ -112,7 +112,8 @@ class CSGOVideo(PSVideo):
         self.results = {}
         for name, readings in self.raw_readings.items():
             int_readings = [int(x) for x in readings]  # Todo: error checking
-            self.results[name] = int_readings
+            smooth_readings = algorithms.smoothReadings(int_readings)
+            self.results[name] = smooth_readings
 
         self.processing = False
         self.video_processed.emit(self.results)
