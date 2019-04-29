@@ -49,6 +49,11 @@ class ResultsScreen(QtWidgets.QWidget):
             subplot.set_ylabel(result[0])
             subplot.plot(range(1, len(result[1]) + 1), result[1])
 
+            if i != num_results-1:
+                subplot.set_xticklabels([])
+            else:
+                subplot.set_xlabel("frame")
+
         self.plot_canvas.draw()
 
         main_layout = QtWidgets.QVBoxLayout()
